@@ -27,6 +27,16 @@ Fonte de referencia:
 Each epic maps to a file under `phases/`.
 Use the phase files as the execution plan and this file as the backlog index.
 
+## Issue files
+
+- `issues/01-bootstrap.md`
+- `issues/02-data-governance.md`
+- `issues/03-tse-v1.md`
+- `issues/04-public-ui.md`
+- `issues/05-documents-rag.md`
+- `issues/06-expansion.md`
+- `issues/07-hardening.md`
+
 ## Epicos
 
 ### EPIC 01 - Bootstrap da plataforma
