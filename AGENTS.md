@@ -39,6 +39,8 @@ Use these files as the source of truth before starting any implementation:
 - `main` is protected and read-only for direct work.
 - Do not commit, push, or implement directly on `main`.
 - Every change must land on `main` through a merge from a branch.
+- Preserve branch history after merge.
+- Do not delete branches unless the user explicitly requests it.
 - Do not mix multiple features in one branch unless the user explicitly asks for a combined change.
 - Keep non-feature work small and traceable.
 
