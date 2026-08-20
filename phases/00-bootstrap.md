@@ -1,6 +1,6 @@
 # Phase 00 - Bootstrap
 
-Status: current
+Status: completed
 
 ## Goal
 
@@ -25,3 +25,4 @@ Create the minimum git-tracked structure that can support the rest of the platfo
 - Root README in place.
 - Ignore rules in place.
 - Phase plan in place.
+- Local stack boots without manual adjustment.
