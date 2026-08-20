@@ -13,6 +13,7 @@ Use these files as the source of truth before starting any implementation:
 - `docs/referencias/AnaliseRAG.md`
 - `issues/README.md`
 - `issues/EPICS.md`
+- `planning/ROADMAP.md`
 - `phases/README.md`
 - `phases/00-bootstrap.md`
 - `phases/01-data-governance.md`

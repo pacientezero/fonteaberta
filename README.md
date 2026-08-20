@@ -10,6 +10,7 @@ Plataforma open source de dados publicos oficiais.
 ## Estrutura de trabalho
 
 - `issues/EPICS.md` define o backlog em epicos.
+- `planning/ROADMAP.md` define o roteiro executivo.
 - `phases/` define a ordem de execucao por fase.
 - `docs/referencias/` guarda os documentos base copiados para o repo.
 
