@@ -6,6 +6,8 @@ coverage/
 .cache/
 tmp/
 logs/
+.svelte-kit/
+.vercel/
 .env
 .env.*
 !.env.example
@@ -21,3 +23,6 @@ directus/
 .kestra/
 docker-data/
 data/
+apps/web/node_modules/
+apps/api/__pycache__/
+apps/api/.venv/
