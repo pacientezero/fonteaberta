@@ -36,7 +36,9 @@ Use these files as the source of truth before starting any implementation:
 - Every new feature must have a dedicated issue.
 - Every new feature must have a dedicated branch.
 - Name the branch from the issue, for example `feature/03-tse-v1`.
-- Do not implement a new feature directly on `main`.
+- `main` is protected and read-only for direct work.
+- Do not commit, push, or implement directly on `main`.
+- Every change must land on `main` through a merge from a branch.
 - Do not mix multiple features in one branch unless the user explicitly asks for a combined change.
 - Keep non-feature work small and traceable.
 
