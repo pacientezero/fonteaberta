@@ -1,212 +1,293 @@
+<script lang="ts">
+  import type { PageData } from './$types';
+  import { candidateAssetsRoute, candidateRoute, searchRoute, sourcesRoute } from '$lib/navigation';
+  import { formatPtBrDateTime, formatPtBrNumber } from '$lib/format';
+
+  export let data: PageData;
+
+  const summary = data.summary;
+  const sourceMetadata = summary.source.metadata as Record<string, string | undefined>;
+</script>
+
 <svelte:head>
-  <title>FonteAberta Bootstrap</title>
+  <title>FonteAberta | V1 presidencial 2026</title>
   <meta
     name="description"
-    content="Bootstrap skeleton for the FonteAberta open data platform."
+    content="Consulta publica com provenance rastreavel para a V1 presidencial 2026."
   />
 </svelte:head>
 
-<script lang="ts">
-  const services = [
-    { name: "PostgreSQL + pgvector", port: "5432" },
-    { name: "Directus", port: "8055" },
-    { name: "Redis", port: "6379" },
-    { name: "n8n", port: "5678" },
-    { name: "Kestra", port: "8080" },
-    { name: "Ollama", port: "11434" },
-    { name: "AI API", port: "8000" },
-  ];
+<div class="hero">
+  <section class="card card-strong card-pad stack">
+    <div>
+      <p class="eyebrow">Fato &gt; Evidencia &gt; Fonte oficial</p>
+      <h1>Quanto o candidato declarou em patrimonio?</h1>
+    </div>
 
-  const phases = [
-    "Bootstrap",
-    "Data governance",
-    "TSE V1",
-    "Public UI",
-    "Documents and RAG",
-    "Expansion",
-    "Hardening",
-  ];
-</script>
-
-<div class="page">
-  <section class="hero">
-    <p class="kicker">Phase 00</p>
-    <h1>FonteAberta</h1>
-    <p class="lede">
-      Monorepo bootstrap for an open platform of official public data with
-      auditability, provenance, and reproducible calculations.
+    <p class="lead">
+      A primeira resposta publica da V1 usa dados oficiais do TSE, calculo reproduzivel e
+      trilha de evidencia visivel.
     </p>
 
-    <div class="actions">
-      <a href="http://localhost:8000/health">API health</a>
-      <a href="http://localhost:8055">Directus</a>
-      <a href="http://localhost:5678">n8n</a>
-      <a href="http://localhost:8080">Kestra</a>
+    <form class="search-form" action={searchRoute()} method="get">
+      <label class="sr-only" for="home-search">Buscar candidato por nome ou SQ_CANDIDATO</label>
+      <input
+        id="home-search"
+        name="q"
+        placeholder="Busque por nome ou SQ_CANDIDATO"
+        autocomplete="off"
+      />
+      <button class="button" type="submit">Buscar</button>
+    </form>
+
+    <div class="toolbar">
+      <a class="button" href={candidateRoute(summary.candidate.external_id)}>Abrir candidato</a>
+      <a class="button-secondary" href={candidateAssetsRoute(summary.candidate.external_id)}>
+        Ver bens
+      </a>
+      <a class="button-secondary" href={sourcesRoute()}>Ver fontes</a>
     </div>
   </section>
 
-  <section class="grid">
-    <article class="panel">
-      <h2>Services</h2>
-      <ul>
-        {#each services as service}
-          <li>
-            <span>{service.name}</span>
-            <strong>{service.port}</strong>
-          </li>
-        {/each}
-      </ul>
-    </article>
+  <aside class="card card-pad stack answer-card">
+    <div>
+      <p class="eyebrow">Resposta em destaque</p>
+      <h2>{summary.declared_assets_total.formatted}</h2>
+      <p class="note">
+        Patrimonio declarado de {summary.person.canonical_name}, calculado a partir de
+        {formatPtBrNumber(summary.assets.length)} bens oficiais.
+      </p>
+    </div>
 
-    <article class="panel">
-      <h2>Delivery order</h2>
-      <ol>
-        {#each phases as phase}
-          <li>{phase}</li>
-        {/each}
-      </ol>
-    </article>
-  </section>
+    {#if summary.claim}
+      <p class="quote">{summary.claim.statement}</p>
+    {/if}
+
+    <dl class="stack stats">
+      <div class="metric">
+        <dt class="metric-label">Candidato</dt>
+        <dd class="metric-value">{summary.person.canonical_name}</dd>
+        <p class="metric-note">
+          {summary.candidate.position} #{summary.candidate.ballot_number} · {summary.party?.acronym}
+        </p>
+      </div>
+
+      <div class="metric">
+        <dt class="metric-label">Coleta</dt>
+        <dd class="metric-value">{formatPtBrDateTime(summary.provenance.candidate_raw_record.collected_at)}</dd>
+        <p class="metric-note">Fonte oficial coletada na janela do pipeline.</p>
+      </div>
+
+      <div class="metric">
+        <dt class="metric-label">Base oficial</dt>
+        <dd class="metric-value">{summary.source.slug.toUpperCase()}</dd>
+        <p class="metric-note">{summary.source.institution}</p>
+      </div>
+
+      <div class="metric">
+        <dt class="metric-label">Calculo</dt>
+        <dd class="metric-value">{summary.declared_assets_total.calculation_method}</dd>
+        <p class="metric-note">Somatorio dos bens declarados no dataset de patrimonio.</p>
+      </div>
+    </dl>
+  </aside>
 </div>
 
+<section class="grid grid-2">
+  <article class="card section">
+    <div class="section-title">
+      <div>
+        <p class="panel-title">Provenience chain</p>
+        <h2>Como a resposta e montada</h2>
+      </div>
+      <span class="badge badge-accent">{summary.provenance.claim_evidence.length} evidencias</span>
+    </div>
+
+    <ol class="list chain">
+      <li>
+        <span>
+          <strong>Fonte oficial</strong>
+          <span class="soft">TSE, portal de dados abertos</span>
+        </span>
+        <span>{summary.source.official ? 'official' : 'internal'}</span>
+      </li>
+      <li>
+        <span>
+          <strong>Datasets</strong>
+          <span class="soft">
+            {summary.datasets.map((dataset) => dataset.slug).join(' + ')}
+          </span>
+        </span>
+        <span>{summary.datasets.length}</span>
+      </li>
+      <li>
+        <span>
+          <strong>Raw record</strong>
+          <span class="soft">{summary.provenance.candidate_raw_record.id}</span>
+        </span>
+        <span>{summary.provenance.candidate_raw_record.processing_status}</span>
+      </li>
+      <li>
+        <span>
+          <strong>Claim</strong>
+          <span class="soft">{summary.claim?.id}</span>
+        </span>
+        <span>{summary.provenance.asset_evidence.length} asset evidences</span>
+      </li>
+    </ol>
+  </article>
+
+  <article class="card section">
+    <div class="section-title">
+      <div>
+        <p class="panel-title">Escopo da V1</p>
+        <h2>O que esta tela cobre agora</h2>
+      </div>
+      <span class="badge">Public UI</span>
+    </div>
+
+    <ul class="list">
+      <li>
+        <span>Resposta, fonte, dataset e registros usados</span>
+        <span>visivel</span>
+      </li>
+      <li>
+        <span>Busca por nome oficial ou SQ_CANDIDATO</span>
+        <span>ativa</span>
+      </li>
+      <li>
+        <span>Pagina do candidato e pagina de bens</span>
+        <span>ativa</span>
+      </li>
+      <li>
+        <span>Pagina de fontes oficiais</span>
+        <span>ativa</span>
+      </li>
+    </ul>
+  </article>
+</section>
+
+<section class="grid grid-2">
+  <article class="card section">
+    <div class="section-title">
+      <div>
+        <p class="panel-title">Fonte</p>
+        <h2>{summary.source.name}</h2>
+      </div>
+      <span class="badge">official</span>
+    </div>
+
+    <ul class="list">
+      <li>
+        <span>Base URL</span>
+        <span>{summary.source.base_url}</span>
+      </li>
+      <li>
+        <span>Documentation</span>
+        <span>{summary.source.documentation_url}</span>
+      </li>
+      <li>
+        <span>Scope</span>
+        <span>{summary.source.scope}</span>
+      </li>
+      <li>
+        <span>License</span>
+        <span>{summary.source.license}</span>
+      </li>
+    </ul>
+
+    <p class="note">
+      Portal:
+      {sourceMetadata.portal_url}
+    </p>
+  </article>
+
+  <article class="card section">
+    <div class="section-title">
+      <div>
+        <p class="panel-title">Datasets</p>
+        <h2>Base indexada no slice atual</h2>
+      </div>
+      <span class="badge">{formatPtBrNumber(summary.datasets.length)} datasets</span>
+    </div>
+
+    <ul class="list">
+      {#each summary.datasets as dataset}
+        <li>
+          <span>
+            <strong>{dataset.name}</strong>
+            <span class="soft">{dataset.resource_url}</span>
+          </span>
+          <span>{dataset.slug}</span>
+        </li>
+      {/each}
+    </ul>
+  </article>
+</section>
+
 <style>
-  :global(body) {
-    margin: 0;
-    font-family:
-      "IBM Plex Sans",
-      "Inter",
-      "Segoe UI",
-      sans-serif;
-    background:
-      radial-gradient(circle at top left, rgba(72, 112, 255, 0.18), transparent 28%),
-      radial-gradient(circle at top right, rgba(0, 180, 160, 0.14), transparent 24%),
-      linear-gradient(180deg, #09111f 0%, #101826 45%, #f3f6fb 45%, #f3f6fb 100%);
-    color: #0b1020;
-  }
-
-  .page {
-    min-height: 100vh;
-    display: grid;
-    gap: 2rem;
-    padding: 4rem 1.5rem 3rem;
-    box-sizing: border-box;
-  }
-
-  .hero,
-  .panel {
-    width: min(100%, 1120px);
-    margin: 0 auto;
-  }
-
-  .hero {
-    color: #f5f7fb;
-    padding: 2rem 0 4rem;
-  }
-
-  .kicker {
-    text-transform: uppercase;
-    letter-spacing: 0.18em;
-    font-size: 0.75rem;
-    color: #8eb5ff;
-  }
-
-  h1 {
-    margin: 0.35rem 0 0.75rem;
-    font-size: clamp(3rem, 8vw, 6.8rem);
-    line-height: 0.95;
-    letter-spacing: -0.06em;
-    max-width: 10ch;
-  }
-
-  .lede {
-    margin: 0;
-    max-width: 64ch;
-    font-size: clamp(1.05rem, 2vw, 1.2rem);
-    line-height: 1.7;
-    color: rgba(245, 247, 251, 0.78);
-  }
-
-  .actions {
+  .search-form {
     display: flex;
     flex-wrap: wrap;
     gap: 0.75rem;
-    margin-top: 1.75rem;
+    align-items: center;
   }
 
-  .actions a {
-    color: #09111f;
-    text-decoration: none;
-    background: #f3f6fb;
+  .search-form input {
+    flex: 1 1 18rem;
+    min-width: 0;
+    padding: 0.95rem 1rem;
     border-radius: 999px;
-    padding: 0.8rem 1rem;
-    font-weight: 600;
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.16);
+    border: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.82);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.82);
   }
 
-  .grid {
-    width: min(100%, 1120px);
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1rem;
+  .search-form input:focus {
+    outline: 2px solid rgba(15, 118, 110, 0.24);
+    outline-offset: 2px;
   }
 
-  .panel {
-    background: rgba(255, 255, 255, 0.84);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    border-radius: 24px;
-    padding: 1.25rem 1.25rem 1rem;
-    box-shadow: 0 22px 60px rgba(15, 22, 37, 0.12);
+  .answer-card h2 {
+    margin-top: 0.15rem;
   }
 
-  .panel h2 {
-    margin: 0 0 1rem;
-    font-size: 1rem;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: #49566f;
+  .stats {
+    gap: 0.75rem;
   }
 
-  ul,
-  ol {
-    margin: 0;
-    padding-left: 1.2rem;
+  .stats .metric {
+    background: rgba(255, 255, 255, 0.74);
   }
 
-  ul {
-    list-style: none;
+  .chain {
+    gap: 0;
+  }
+
+  .chain li span {
+    display: block;
+  }
+
+  .chain strong {
+    display: block;
+    margin-bottom: 0.15rem;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
     padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
   }
 
-  li {
-    display: flex;
-    justify-content: space-between;
-    gap: 1rem;
-    padding: 0.75rem 0;
-    border-bottom: 1px solid rgba(14, 23, 41, 0.08);
-  }
-
-  li:last-child {
-    border-bottom: 0;
-  }
-
-  strong {
-    color: #0c1730;
-  }
-
-  @media (max-width: 720px) {
-    .page {
-      padding-top: 2.5rem;
-    }
-
-    .grid {
-      grid-template-columns: 1fr;
-    }
-
-    .actions a {
-      width: 100%;
-      text-align: center;
+  @media (max-width: 900px) {
+    .search-form input {
+      flex-basis: 100%;
     }
   }
 </style>
