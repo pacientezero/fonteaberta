@@ -144,7 +144,7 @@ INSERT INTO directus_collections (
     icon,
     color
 ) VALUES
-    ('documentos_rag', 'Folder for document and RAG tables', false, false, false, 'open', 'all', false, 'active', 17, 'file-document-multiple', '#0ea5e9')
+    ('documentos', 'Folder for document and retrieval tables', false, false, false, 'open', 'all', false, 'active', 17, 'file-document-multiple', '#0ea5e9')
 ON CONFLICT (collection) DO UPDATE
 SET
     note = EXCLUDED.note,
@@ -158,6 +158,13 @@ SET
     sort = EXCLUDED.sort,
     icon = EXCLUDED.icon,
     color = EXCLUDED.color;
+
+UPDATE directus_collections
+SET "group" = 'documentos'
+WHERE "group" = 'documentos_rag';
+
+DELETE FROM directus_collections
+WHERE collection = 'documentos_rag';
 
 INSERT INTO directus_collections (
     collection,
@@ -174,9 +181,9 @@ INSERT INTO directus_collections (
     icon,
     color
 ) VALUES
-    ('documents', 'Canonical document registry', false, false, true, 'open', 'all', false, 'active', 18, 'documentos_rag', 'file-document-multiple', '#06b6d4'),
-    ('document_versions', 'Document version history', false, false, true, 'open', 'all', false, 'active', 19, 'documentos_rag', 'file-clock', '#0ea5e9'),
-    ('document_chunks', 'Chunked document embeddings', false, false, true, 'open', 'all', false, 'active', 20, 'documentos_rag', 'vector-polyline', '#a855f7')
+    ('documents', 'Canonical document registry', false, false, true, 'open', 'all', false, 'active', 18, 'documentos', 'file-document-multiple', '#06b6d4'),
+    ('document_versions', 'Document version history', false, false, true, 'open', 'all', false, 'active', 19, 'documentos', 'file-clock', '#0ea5e9'),
+    ('document_chunks', 'Chunked document embeddings', false, false, true, 'open', 'all', false, 'active', 20, 'documentos', 'vector-polyline', '#a855f7')
 ON CONFLICT (collection) DO UPDATE
 SET
     note = EXCLUDED.note,

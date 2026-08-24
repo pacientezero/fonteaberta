@@ -20,9 +20,10 @@ The admin sidebar is grouped as:
 - `catalogo`: `sources`, `datasets`
 - `ingestao`: `ingestion_runs`
 - `proveniencia`: `raw_records`, `evidence`, `facts`, `claims`
-- `tse`: `people`, `entity_aliases`, `elections`, `parties`, `candidates`, `candidate_assets`
-- `documentos_rag`: `documents`, `document_versions`, `document_chunks`
+- `eleitoral`: `people`, `entity_aliases`, `elections`, `parties`, `candidates`, `candidate_assets`
+- `documentos`: `documents`, `document_versions`, `document_chunks`
 - `economia`: `economic_series`, `economic_observations`
+- `legislativo`: `mandates`
 
 `claims_evidence` stays a technical join table and is intentionally not managed as a Directus collection because the Directus runtime ignores tables without a primary key.
 
@@ -47,5 +48,5 @@ make check-governance
 
 - Every record can be traced from source to claim.
 - The provenance path is testable with an automated smoke test.
-- Directus collections and sidebar metadata exist for the managed canonical and document tables.
+- Directus collections and sidebar metadata exist for the managed canonical, electoral, document, economic, and legislative tables.
 - Public and researcher read access is declared in the database-backed RBAC seed.

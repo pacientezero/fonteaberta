@@ -25,3 +25,4 @@ Create the canonical data model for sources, datasets, ingestions, raw records, 
 ## Notes
 
 - This issue should not start before the bootstrap layer is stable.
+- The Directus sidebar is organized by domain as `catalogo`, `ingestao`, `proveniencia`, `eleitoral`, `documentos`, `economia`, and `legislativo`, with icons and colors kept in the database-backed smoke test.

@@ -180,9 +180,9 @@ INSERT INTO directus_collections (
     icon,
     color
 ) VALUES
-    ('catalogo', 'Folder for source and dataset registries', false, false, false, 'open', 'all', false, 'active', 0, 'folder', '#475569'),
-    ('ingestao', 'Folder for ingestion run history', false, false, false, 'open', 'all', false, 'active', 3, 'folder', '#d97706'),
-    ('proveniencia', 'Folder for raw records, evidence, facts, and claims', false, false, false, 'open', 'all', false, 'active', 5, 'folder', '#059669')
+    ('catalogo', 'Folder for source and dataset registries', false, false, false, 'open', 'all', false, 'active', 0, 'database', '#475569'),
+    ('ingestao', 'Folder for ingestion run history', false, false, false, 'open', 'all', false, 'active', 3, 'sync', '#d97706'),
+    ('proveniencia', 'Folder for raw records, evidence, facts, and claims', false, false, false, 'open', 'all', false, 'active', 5, 'shield-check', '#059669')
 ON CONFLICT (collection) DO UPDATE
 SET
     note = EXCLUDED.note,
