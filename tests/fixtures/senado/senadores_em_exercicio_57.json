@@ -1,0 +1,290 @@
+{
+  "source": {
+    "name": "Senado Federal",
+    "slug": "senado",
+    "institution": "Senado Federal",
+    "description": "API legislativa de dados abertos do Senado Federal",
+    "base_url": "https://legis.senado.leg.br/dadosabertos",
+    "documentation_url": "https://www12.senado.leg.br/dados-abertos",
+    "source_type": "official_registry",
+    "scope": "federal",
+    "official": true,
+    "update_frequency": "daily",
+    "license": "open data",
+    "enabled": true,
+    "metadata": {
+      "api_docs_url": "https://legis.senado.leg.br/dadosabertos/api-docs/swagger-ui/index.html",
+      "openapi_url": "https://legis.senado.leg.br/dadosabertos/v3/api-docs",
+      "list_endpoint": "https://legis.senado.leg.br/dadosabertos/senador/lista/atual?v=4",
+      "current_legislature": 57
+    }
+  },
+  "dataset": {
+    "name": "Senadores em Exercício - Legislatura 57",
+    "slug": "senadores-em-exercicio-57",
+    "external_id": "senado-senadores-em-exercicio-57",
+    "format": "json",
+    "resource_url": "https://legis.senado.leg.br/dadosabertos/senador/lista/atual?v=4",
+    "scope": "federal",
+    "period_start": null,
+    "period_end": null,
+    "update_frequency": "daily",
+    "enabled": true,
+    "metadata": {
+      "current_legislature": 57,
+      "snapshot_kind": "current_senators"
+    }
+  },
+  "snapshot": {
+    "ListaParlamentarEmExercicio": {
+      "noNamespaceSchemaLocation": "https://legis.senado.leg.br/dadosabertos/dados/ListaParlamentarEmExerciciov4.xsd",
+      "Metadados": {
+        "Versao": "24/08/2026 12:54:34",
+        "VersaoServico": "4",
+        "DataVersaoServico": "2020-07-15",
+        "DescricaoDataSet": "Lista dos Parlamentares que estão atualmente em Exercício. Informações atuais sobre o Parlamentar."
+      },
+      "Parlamentares": {
+        "Parlamentar": [
+          {
+            "IdentificacaoParlamentar": {
+              "CodigoParlamentar": "5672",
+              "CodigoPublicoNaLegAtual": "800",
+              "NomeParlamentar": "Alan Rick",
+              "NomeCompletoParlamentar": "Alan Rick Miranda",
+              "SexoParlamentar": "Masculino",
+              "FormaTratamento": "Senador ",
+              "UrlFotoParlamentar": "http://www.senado.leg.br/senadores/img/fotos-oficiais/senador5672.jpg",
+              "UrlPaginaParlamentar": "http://www25.senado.leg.br/web/senadores/senador/-/perfil/5672",
+              "EmailParlamentar": "sen.alanrick@senado.leg.br",
+              "Telefones": {
+                "Telefone": [
+                  {
+                    "NumeroTelefone": "33036333",
+                    "OrdemPublicacao": "1",
+                    "IndicadorFax": "Não"
+                  }
+                ]
+              },
+              "SiglaPartidoParlamentar": "REPUBLICANOS",
+              "UfParlamentar": "AC",
+              "Bloco": {
+                "CodigoBloco": "346",
+                "NomeBloco": "Bloco Parlamentar Aliança",
+                "NomeApelido": "BLALIANÇA",
+                "DataCriacao": "2023-03-20"
+              },
+              "MembroMesa": "Não",
+              "MembroLideranca": "Sim"
+            },
+            "Mandato": {
+              "CodigoMandato": "596",
+              "UfParlamentar": "AC",
+              "PrimeiraLegislaturaDoMandato": {
+                "NumeroLegislatura": "57",
+                "DataInicio": "2023-02-01",
+                "DataFim": "2027-01-31"
+              },
+              "SegundaLegislaturaDoMandato": {
+                "NumeroLegislatura": "58",
+                "DataInicio": "2027-02-01",
+                "DataFim": "2031-01-31"
+              },
+              "DescricaoParticipacao": "Titular",
+              "Exercicios": {
+                "Exercicio": [
+                  {
+                    "CodigoExercicio": "3028",
+                    "DataInicio": "2023-02-01"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "IdentificacaoParlamentar": {
+              "CodigoParlamentar": "4639",
+              "CodigoPublicoNaLegAtual": "877",
+              "NomeParlamentar": "Beto Faro",
+              "NomeCompletoParlamentar": "José Roberto Oliveira Faro",
+              "SexoParlamentar": "Masculino",
+              "FormaTratamento": "Senador ",
+              "UrlFotoParlamentar": "http://www.senado.leg.br/senadores/img/fotos-oficiais/senador4639.jpg",
+              "UrlPaginaParlamentar": "http://www25.senado.leg.br/web/senadores/senador/-/perfil/4639",
+              "EmailParlamentar": "sen.betofaro@senado.leg.br",
+              "Telefones": {
+                "Telefone": [
+                  {
+                    "NumeroTelefone": "33035220",
+                    "OrdemPublicacao": "1",
+                    "IndicadorFax": "Não"
+                  }
+                ]
+              },
+              "SiglaPartidoParlamentar": "PT",
+              "UfParlamentar": "PA",
+              "MembroMesa": "Não",
+              "MembroLideranca": "Não"
+            },
+            "Mandato": {
+              "CodigoMandato": "604",
+              "UfParlamentar": "PA",
+              "PrimeiraLegislaturaDoMandato": {
+                "NumeroLegislatura": "57",
+                "DataInicio": "2023-02-01",
+                "DataFim": "2027-01-31"
+              },
+              "SegundaLegislaturaDoMandato": {
+                "NumeroLegislatura": "58",
+                "DataInicio": "2027-02-01",
+                "DataFim": "2031-01-31"
+              },
+              "DescricaoParticipacao": "Titular",
+              "Exercicios": {
+                "Exercicio": [
+                  {
+                    "CodigoExercicio": "3020",
+                    "DataInicio": "2023-02-01"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "selected_parliamentarians": [
+    {
+      "list_row": {
+        "IdentificacaoParlamentar": {
+          "CodigoParlamentar": "5672",
+          "CodigoPublicoNaLegAtual": "800",
+          "NomeParlamentar": "Alan Rick",
+          "NomeCompletoParlamentar": "Alan Rick Miranda",
+          "SexoParlamentar": "Masculino",
+          "FormaTratamento": "Senador ",
+          "UrlFotoParlamentar": "http://www.senado.leg.br/senadores/img/fotos-oficiais/senador5672.jpg",
+          "UrlPaginaParlamentar": "http://www25.senado.leg.br/web/senadores/senador/-/perfil/5672",
+          "EmailParlamentar": "sen.alanrick@senado.leg.br",
+          "Telefones": {
+            "Telefone": [
+              {
+                "NumeroTelefone": "33036333",
+                "OrdemPublicacao": "1",
+                "IndicadorFax": "Não"
+              }
+            ]
+          },
+          "SiglaPartidoParlamentar": "REPUBLICANOS",
+          "UfParlamentar": "AC",
+          "Bloco": {
+            "CodigoBloco": "346",
+            "NomeBloco": "Bloco Parlamentar Aliança",
+            "NomeApelido": "BLALIANÇA",
+            "DataCriacao": "2023-03-20"
+          },
+          "MembroMesa": "Não",
+          "MembroLideranca": "Sim"
+        },
+        "Mandato": {
+          "CodigoMandato": "596",
+          "UfParlamentar": "AC",
+          "PrimeiraLegislaturaDoMandato": {
+            "NumeroLegislatura": "57",
+            "DataInicio": "2023-02-01",
+            "DataFim": "2027-01-31"
+          },
+          "SegundaLegislaturaDoMandato": {
+            "NumeroLegislatura": "58",
+            "DataInicio": "2027-02-01",
+            "DataFim": "2031-01-31"
+          },
+          "DescricaoParticipacao": "Titular",
+          "Exercicios": {
+            "Exercicio": [
+              {
+                "CodigoExercicio": "3028",
+                "DataInicio": "2023-02-01"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "list_row": {
+        "IdentificacaoParlamentar": {
+          "CodigoParlamentar": "4639",
+          "CodigoPublicoNaLegAtual": "877",
+          "NomeParlamentar": "Beto Faro",
+          "NomeCompletoParlamentar": "José Roberto Oliveira Faro",
+          "SexoParlamentar": "Masculino",
+          "FormaTratamento": "Senador ",
+          "UrlFotoParlamentar": "http://www.senado.leg.br/senadores/img/fotos-oficiais/senador4639.jpg",
+          "UrlPaginaParlamentar": "http://www25.senado.leg.br/web/senadores/senador/-/perfil/4639",
+          "EmailParlamentar": "sen.betofaro@senado.leg.br",
+          "Telefones": {
+            "Telefone": [
+              {
+                "NumeroTelefone": "33035220",
+                "OrdemPublicacao": "1",
+                "IndicadorFax": "Não"
+              }
+            ]
+          },
+          "SiglaPartidoParlamentar": "PT",
+          "UfParlamentar": "PA",
+          "MembroMesa": "Não",
+          "MembroLideranca": "Não"
+        },
+        "Mandato": {
+          "CodigoMandato": "604",
+          "UfParlamentar": "PA",
+          "PrimeiraLegislaturaDoMandato": {
+            "NumeroLegislatura": "57",
+            "DataInicio": "2023-02-01",
+            "DataFim": "2027-01-31"
+          },
+          "SegundaLegislaturaDoMandato": {
+            "NumeroLegislatura": "58",
+            "DataInicio": "2027-02-01",
+            "DataFim": "2031-01-31"
+          },
+          "DescricaoParticipacao": "Titular",
+          "Exercicios": {
+            "Exercicio": [
+              {
+                "CodigoExercicio": "3020",
+                "DataInicio": "2023-02-01"
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "raw_record": {
+    "external_id": "senado-senadores-em-exercicio-57-snapshot",
+    "collected_at": "2026-08-24T12:54:34-03:00",
+    "metadata": {
+      "note": "sample snapshot of the current Senate roster"
+    }
+  },
+  "evidence": {
+    "external_id": "senado-senadores-em-exercicio-57-evidence",
+    "source_url": "https://legis.senado.leg.br/dadosabertos/senador/lista/atual?v=4",
+    "section": "senadores em exercicio",
+    "collected_at": "2026-08-24T12:54:34-03:00",
+    "metadata": {
+      "note": "evidence for the current Senate roster snapshot"
+    }
+  },
+  "ingestion_run": {
+    "started_at": "2026-08-24T12:54:34-03:00",
+    "finished_at": "2026-08-24T12:54:34-03:00",
+    "metadata": {
+      "pipeline_note": "senado current senators sample"
+    }
+  }
+}

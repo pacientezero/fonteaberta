@@ -1,6 +1,6 @@
 COMPOSE ?= docker compose
 
-.PHONY: bootstrap check migrate-governance check-governance migrate-tse-v1 check-tse-v1 migrate-documents-rag check-documents-rag migrate-expansion-bcb check-expansion-bcb migrate-expansion-ibge check-expansion-ibge migrate-expansion-camara check-expansion-camara up down ps logs
+.PHONY: bootstrap check migrate-governance check-governance migrate-tse-v1 check-tse-v1 migrate-documents-rag check-documents-rag migrate-expansion-bcb check-expansion-bcb migrate-expansion-ibge check-expansion-ibge migrate-expansion-camara check-expansion-camara check-expansion-senado up down ps logs
 
 bootstrap:
 	@printf '%s\n' 'Bootstrap is represented by the tracked repo structure, compose file, and service skeletons.'
@@ -43,6 +43,9 @@ migrate-expansion-camara:
 
 check-expansion-camara:
 	$(COMPOSE) run --rm --no-deps -v $(CURDIR):/workspace -w /workspace api python3 scripts/check-expansion-camara.py
+
+check-expansion-senado:
+	$(COMPOSE) run --rm --no-deps -v $(CURDIR):/workspace -w /workspace api python3 scripts/check-expansion-senado.py
 
 up:
 	$(COMPOSE) up --build

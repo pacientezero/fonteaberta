@@ -33,3 +33,4 @@ Add the next official sources after the V1 core is stable.
 - Second expansion slice completed: IBGE IPCA monthly variation with deterministic fixture, idempotent ingest, and no-evidence query behavior.
 - Directus now groups the economic collections under `economia` with stable icons, colors, and sort order covered by the governance smoke test.
 - Third expansion slice completed: Câmara current deputies snapshot with `mandates`, provenance, facts, and claims against the official `/deputados` and `/deputados/{id}` endpoints.
+- Fourth expansion slice completed: Senado current roster snapshot using the official `GET /dadosabertos/senador/lista/atual?v=4` list endpoint, with snapshot-dated provenance and no dependency on the per-senator detail endpoint.
