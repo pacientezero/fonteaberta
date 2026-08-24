@@ -10,6 +10,8 @@ from app.documents_rag import (
     resolve_query_scope,
 )
 from app.bcb_expansion import fetch_series_summary, query_observation_response
+from app.ibge_expansion import fetch_series_summary as fetch_ibge_series_summary
+from app.ibge_expansion import query_observation_response as query_ibge_observation_response
 from app.tse_v1 import fetch_candidate_summary
 
 app = FastAPI(title="FonteAberta AI Service", version="0.3.0")
@@ -95,3 +97,21 @@ def bcb_selic_observation(observation_date: str) -> dict[str, object]:
             return query_observation_response(connection, observation_date)
         except KeyError as exc:
             raise HTTPException(status_code=404, detail="Selic series not found") from exc
+
+
+@app.get("/v1/economic/ibge/ipca")
+def ibge_ipca_summary() -> dict[str, object]:
+    with db_connection() as connection:
+        try:
+            return fetch_ibge_series_summary(connection)
+        except KeyError as exc:
+            raise HTTPException(status_code=404, detail="IPCA series not found") from exc
+
+
+@app.get("/v1/economic/ibge/ipca/{period}")
+def ibge_ipca_observation(period: str) -> dict[str, object]:
+    with db_connection() as connection:
+        try:
+            return query_ibge_observation_response(connection, period)
+        except KeyError as exc:
+            raise HTTPException(status_code=404, detail="IPCA series not found") from exc

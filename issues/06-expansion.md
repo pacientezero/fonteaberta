@@ -29,4 +29,5 @@ Add the next official sources after the V1 core is stable.
 ## Notes
 
 - Do not start this before the V1 core is stable and visible.
-- First expansion slice in progress: BCB Selic time series with deterministic fixture, idempotent ingest, and no-evidence query behavior.
+- First expansion slice completed: BCB Selic time series with deterministic fixture, idempotent ingest, and no-evidence query behavior.
+- Second expansion slice completed: IBGE IPCA monthly variation with deterministic fixture, idempotent ingest, and no-evidence query behavior.
