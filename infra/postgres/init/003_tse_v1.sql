@@ -309,7 +309,7 @@ INSERT INTO directus_collections (
     icon,
     color
 ) VALUES
-    ('tse', 'Folder for election domain tables', false, false, false, 'open', 'all', false, 'active', 10, 'folder', '#2563eb')
+    ('tse', 'Folder for election domain tables', false, false, false, 'open', 'all', false, 'active', 10, 'ballot', '#2563eb')
 ON CONFLICT (collection) DO UPDATE
 SET
     note = EXCLUDED.note,

@@ -217,7 +217,7 @@ INSERT INTO directus_collections (
     ('ingestion_runs', 'Ingestion run history', false, false, true, 'open', 'all', false, 'active', 4, 'ingestao', 'sync', '#d97706'),
     ('raw_records', 'Raw ingestion records', false, false, true, 'open', 'all', false, 'active', 6, 'proveniencia', 'archive', '#64748b'),
     ('evidence', 'Evidence records tied to raw records', false, false, true, 'open', 'all', false, 'active', 7, 'proveniencia', 'shield-check', '#10b981'),
-    ('facts', 'Normalized facts', false, false, true, 'open', 'all', false, 'active', 8, 'proveniencia', 'function', '#059669'),
+    ('facts', 'Normalized facts', false, false, true, 'open', 'all', false, 'active', 8, 'proveniencia', 'calculator', '#059669'),
     ('claims', 'Claims with provenance', false, false, true, 'open', 'all', false, 'active', 9, 'proveniencia', 'comment-text-outline', '#8b5cf6')
 ON CONFLICT (collection) DO UPDATE
 SET

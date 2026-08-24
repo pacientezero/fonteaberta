@@ -1,0 +1,226 @@
+{
+  "source": {
+    "name": "Camara dos Deputados",
+    "slug": "camara",
+    "institution": "Camara dos Deputados",
+    "description": "API oficial de dados abertos da Camara dos Deputados",
+    "base_url": "https://dadosabertos.camara.leg.br/api/v2",
+    "documentation_url": "https://dadosabertos.camara.leg.br/swagger/api.html",
+    "source_type": "official_registry",
+    "scope": "federal",
+    "official": true,
+    "update_frequency": "daily",
+    "license": "open data",
+    "enabled": true,
+    "metadata": {
+      "api_docs_url": "https://dadosabertos.camara.leg.br/swagger/api.html",
+      "openapi_url": "https://dadosabertos.camara.leg.br/api/v2/api-docs",
+      "legislature": 57
+    }
+  },
+  "dataset": {
+    "name": "Deputados - Legislatura 57",
+    "slug": "deputados-legislatura-57",
+    "external_id": "camara-deputados-legislatura-57",
+    "format": "json",
+    "resource_url": "https://dadosabertos.camara.leg.br/api/v2/deputados?idLegislatura=57&itens=10&ordem=ASC&ordenarPor=id",
+    "scope": "federal",
+    "period_start": null,
+    "period_end": null,
+    "update_frequency": "daily",
+    "enabled": true,
+    "metadata": {
+      "legislature": 57,
+      "snapshot": "current_deputies"
+    }
+  },
+  "snapshot": {
+    "list_request": {
+      "url": "https://dadosabertos.camara.leg.br/api/v2/deputados?idLegislatura=57&itens=10&ordem=ASC&ordenarPor=id",
+      "page": 1,
+      "items": 10,
+      "idLegislatura": 57
+    },
+    "list_page": {
+      "links": [
+        {
+          "rel": "self",
+          "href": "https://dadosabertos.camara.leg.br/api/v2/deputados?idLegislatura=57&itens=10&ordem=ASC&ordenarPor=id"
+        },
+        {
+          "rel": "next",
+          "href": "https://dadosabertos.camara.leg.br/api/v2/deputados?idLegislatura=57&ordem=ASC&ordenarPor=id&pagina=2&itens=10"
+        },
+        {
+          "rel": "first",
+          "href": "https://dadosabertos.camara.leg.br/api/v2/deputados?idLegislatura=57&ordem=ASC&ordenarPor=id&pagina=1&itens=10"
+        },
+        {
+          "rel": "last",
+          "href": "https://dadosabertos.camara.leg.br/api/v2/deputados?idLegislatura=57&ordem=ASC&ordenarPor=id&pagina=88&itens=10"
+        }
+      ],
+      "dados": [
+        {
+          "id": 73433,
+          "uri": "https://dadosabertos.camara.leg.br/api/v2/deputados/73433",
+          "nome": "Arlindo Chinaglia",
+          "siglaPartido": "PT",
+          "uriPartido": "https://dadosabertos.camara.leg.br/api/v2/partidos/36844",
+          "siglaUf": "SP",
+          "idLegislatura": 57,
+          "urlFoto": "https://www.camara.leg.br/internet/deputado/bandep/73433.jpg",
+          "email": "dep.arlindochinaglia@camara.leg.br"
+        },
+        {
+          "id": 66385,
+          "uri": "https://dadosabertos.camara.leg.br/api/v2/deputados/66385",
+          "nome": "Julio Arcoverde",
+          "siglaPartido": "PP",
+          "uriPartido": "https://dadosabertos.camara.leg.br/api/v2/partidos/37903",
+          "siglaUf": "PI",
+          "idLegislatura": 57,
+          "urlFoto": "https://www.camara.leg.br/internet/deputado/bandep/66385.jpg",
+          "email": "dep.julioarcoverde@camara.leg.br"
+        }
+      ],
+      "metadata": null
+    }
+  },
+  "selected_deputies": [
+    {
+      "list_row": {
+        "id": 73433,
+        "uri": "https://dadosabertos.camara.leg.br/api/v2/deputados/73433",
+        "nome": "Arlindo Chinaglia",
+        "siglaPartido": "PT",
+        "uriPartido": "https://dadosabertos.camara.leg.br/api/v2/partidos/36844",
+        "siglaUf": "SP",
+        "idLegislatura": 57,
+        "urlFoto": "https://www.camara.leg.br/internet/deputado/bandep/73433.jpg",
+        "email": "dep.arlindochinaglia@camara.leg.br"
+      },
+      "detail": {
+        "id": 73433,
+        "uri": "https://dadosabertos.camara.leg.br/api/v2/deputados/73433",
+        "nomeCivil": "ARLINDO CHIGNALIA JUNIOR",
+        "ultimoStatus": {
+          "id": 73433,
+          "uri": "https://dadosabertos.camara.leg.br/api/v2/deputados/73433",
+          "nome": "Arlindo Chinaglia",
+          "siglaPartido": "PT",
+          "uriPartido": null,
+          "siglaUf": "SP",
+          "idLegislatura": 57,
+          "urlFoto": "https://www.camara.leg.br/internet/deputado/bandep/73433.jpg",
+          "email": null,
+          "data": "2023-02-01",
+          "nomeEleitoral": "Arlindo Chinaglia",
+          "gabinete": {
+            "nome": "4",
+            "predio": "x",
+            "sala": "4",
+            "andar": null,
+            "telefone": "3215-5966",
+            "email": "dep.arlindochinaglia@camara.leg.br"
+          },
+          "situacao": "Exercício",
+          "condicaoEleitoral": "Titular",
+          "descricaoStatus": null
+        },
+        "cpf": "06821146187",
+        "sexo": "M",
+        "urlWebsite": null,
+        "redeSocial": [
+          "https://twitter.com/achinaglia",
+          "https://www.facebook.com/depchinaglia",
+          "https://www.instagram.com/depchinaglia"
+        ],
+        "dataNascimento": "1949-12-24",
+        "dataFalecimento": null,
+        "ufNascimento": "SP",
+        "municipioNascimento": "Serra Azul",
+        "escolaridade": "Pós-Graduação"
+      }
+    },
+    {
+      "list_row": {
+        "id": 66385,
+        "uri": "https://dadosabertos.camara.leg.br/api/v2/deputados/66385",
+        "nome": "Julio Arcoverde",
+        "siglaPartido": "PP",
+        "uriPartido": "https://dadosabertos.camara.leg.br/api/v2/partidos/37903",
+        "siglaUf": "PI",
+        "idLegislatura": 57,
+        "urlFoto": "https://www.camara.leg.br/internet/deputado/bandep/66385.jpg",
+        "email": "dep.julioarcoverde@camara.leg.br"
+      },
+      "detail": {
+        "id": 66385,
+        "uri": "https://dadosabertos.camara.leg.br/api/v2/deputados/66385",
+        "nomeCivil": "JULIO FERRAZ ARCOVERDE",
+        "ultimoStatus": {
+          "id": 66385,
+          "uri": "https://dadosabertos.camara.leg.br/api/v2/deputados/66385",
+          "nome": "Julio Arcoverde",
+          "siglaPartido": "PP",
+          "uriPartido": null,
+          "siglaUf": "PI",
+          "idLegislatura": 57,
+          "urlFoto": "https://www.camara.leg.br/internet/deputado/bandep/66385.jpg",
+          "email": null,
+          "data": "2026-02-04",
+          "nomeEleitoral": "Julio Arcoverde",
+          "gabinete": {
+            "nome": "729",
+            "predio": "4",
+            "sala": "729",
+            "andar": "7",
+            "telefone": "3215-5729",
+            "email": "dep.julioarcoverde@camara.leg.br"
+          },
+          "situacao": "Exercício",
+          "condicaoEleitoral": "Titular",
+          "descricaoStatus": ""
+        },
+        "cpf": "77309766768",
+        "sexo": "M",
+        "urlWebsite": null,
+        "redeSocial": [
+          "https://twitter.com/julioarcoverde",
+          "https://www.facebook.com/depjulioarcoverde",
+          "https://www.instagram.com/julioarcoverde",
+          "https://youtube.com/julioarcoverde"
+        ],
+        "dataNascimento": "1966-02-14",
+        "dataFalecimento": null,
+        "ufNascimento": "PI",
+        "municipioNascimento": "Teresina",
+        "escolaridade": "Superior"
+      }
+    }
+  ],
+  "raw_record": {
+    "external_id": "camara-deputados-legislatura-57-snapshot",
+    "collected_at": "2026-08-24T10:15:00-03:00",
+    "metadata": {
+      "note": "sample snapshot of current deputies from the official Câmara API"
+    }
+  },
+  "evidence": {
+    "external_id": "camara-deputados-legislatura-57-evidence",
+    "source_url": "https://dadosabertos.camara.leg.br/api/v2/deputados?idLegislatura=57&itens=10&ordem=ASC&ordenarPor=id",
+    "section": "deputados",
+    "collected_at": "2026-08-24T10:15:00-03:00",
+    "metadata": {
+      "note": "evidence for the deputy roster snapshot"
+    }
+  },
+  "ingestion_run": {
+    "started_at": "2026-08-24T10:15:00-03:00",
+    "finished_at": "2026-08-24T10:15:00-03:00",
+    "metadata": {
+      "pipeline_note": "camara current deputies sample"
+    }
+  }
+}

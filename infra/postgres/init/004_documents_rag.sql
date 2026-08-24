@@ -144,7 +144,7 @@ INSERT INTO directus_collections (
     icon,
     color
 ) VALUES
-    ('documentos_rag', 'Folder for document and RAG tables', false, false, false, 'open', 'all', false, 'active', 17, 'folder', '#0ea5e9')
+    ('documentos_rag', 'Folder for document and RAG tables', false, false, false, 'open', 'all', false, 'active', 17, 'file-document-multiple', '#0ea5e9')
 ON CONFLICT (collection) DO UPDATE
 SET
     note = EXCLUDED.note,

@@ -9,7 +9,7 @@ Entregar a V1 da plataforma com base em dados publicos oficiais, provenance audi
 - Repo Git criado e publicado em GitHub.
 - Branch de trabalho atual: `feature/06-expansion`.
 - Fases 00 a 04 concluidas e validadas localmente na branch de trabalho.
-- Fase 05 em andamento com os primeiros slices do BCB Selic e IBGE IPCA validados localmente.
+- Fase 05 em andamento com os primeiros slices do BCB Selic, IBGE IPCA e Câmara dos Deputados validados localmente.
 - `AGENTS.md` define o contrato operacional.
 - `issues/` contem o backlog em 7 issues.
 - `phases/` contem a ordem de execucao por fase.
@@ -130,6 +130,12 @@ Entregas:
 Criterio de aceite:
 
 - a mesma cadeia de provenance funciona nas novas fontes
+
+Status atual:
+
+- BCB Selic validado localmente.
+- IBGE IPCA validado localmente.
+- Câmara dos Deputados validado localmente com a primeira fatia de deputados e mandates.
 
 ### Fase 06 - Hardening
 

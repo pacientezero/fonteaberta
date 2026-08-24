@@ -236,6 +236,8 @@ BEGIN
                 ('proveniencia'),
                 ('tse'),
                 ('documentos_rag'),
+                ('economia'),
+                ('legislativo'),
                 ('sources'),
                 ('datasets'),
                 ('ingestion_runs'),
@@ -245,7 +247,10 @@ BEGIN
                 ('claims'),
                 ('documents'),
                 ('document_versions'),
-                ('document_chunks')
+                ('document_chunks'),
+                ('economic_series'),
+                ('economic_observations'),
+                ('mandates')
         ) AS managed(collection)
         LEFT JOIN directus_collections dc ON dc.collection = managed.collection
         WHERE dc.collection IS NULL
@@ -257,33 +262,39 @@ BEGIN
         SELECT 1
         FROM (
             VALUES
-                ('catalogo', '', 'folder', '#475569'),
-                ('ingestao', '', 'folder', '#d97706'),
-                ('proveniencia', '', 'folder', '#059669'),
-                ('tse', '', 'folder', '#2563eb'),
-                ('documentos_rag', '', 'folder', '#0ea5e9'),
-                ('sources', 'catalogo', 'database', '#2563eb'),
-                ('datasets', 'catalogo', 'table', '#14b8a6'),
-                ('ingestion_runs', 'ingestao', 'sync', '#d97706'),
-                ('raw_records', 'proveniencia', 'archive', '#64748b'),
-                ('evidence', 'proveniencia', 'shield-check', '#10b981'),
-                ('facts', 'proveniencia', 'function', '#059669'),
-                ('claims', 'proveniencia', 'comment-text-outline', '#8b5cf6'),
-                ('people', 'tse', 'account-group', '#f97316'),
-                ('entity_aliases', 'tse', 'link-variant', '#6b7280'),
-                ('elections', 'tse', 'ballot', '#ef4444'),
-                ('parties', 'tse', 'flag', '#ec4899'),
-                ('candidates', 'tse', 'account-tie', '#2563eb'),
-                ('candidate_assets', 'tse', 'cash-multiple', '#f59e0b'),
-                ('documents', 'documentos_rag', 'file-document-multiple', '#06b6d4'),
-                ('document_versions', 'documentos_rag', 'file-clock', '#0ea5e9'),
-                ('document_chunks', 'documentos_rag', 'vector-polyline', '#a855f7')
-        ) AS expected(collection, expected_group, expected_icon, expected_color)
+                ('catalogo', '', 'folder', '#475569', 0),
+                ('ingestao', '', 'folder', '#d97706', 3),
+                ('proveniencia', '', 'folder', '#059669', 5),
+                ('tse', '', 'ballot', '#2563eb', 10),
+                ('documentos_rag', '', 'file-document-multiple', '#0ea5e9', 17),
+                ('economia', '', 'chart-line', '#0891b2', 21),
+                ('legislativo', '', 'gavel', '#7c3aed', 24),
+                ('sources', 'catalogo', 'database', '#2563eb', 1),
+                ('datasets', 'catalogo', 'table', '#14b8a6', 2),
+                ('ingestion_runs', 'ingestao', 'sync', '#d97706', 4),
+                ('raw_records', 'proveniencia', 'archive', '#64748b', 6),
+                ('evidence', 'proveniencia', 'shield-check', '#10b981', 7),
+                ('facts', 'proveniencia', 'calculator', '#059669', 8),
+                ('claims', 'proveniencia', 'comment-text-outline', '#8b5cf6', 9),
+                ('people', 'tse', 'account-group', '#f97316', 11),
+                ('entity_aliases', 'tse', 'link-variant', '#6b7280', 12),
+                ('elections', 'tse', 'ballot', '#ef4444', 13),
+                ('parties', 'tse', 'flag', '#ec4899', 14),
+                ('candidates', 'tse', 'account-tie', '#2563eb', 15),
+                ('candidate_assets', 'tse', 'cash-multiple', '#f59e0b', 16),
+                ('documents', 'documentos_rag', 'file-document-multiple', '#06b6d4', 18),
+                ('document_versions', 'documentos_rag', 'file-clock', '#0ea5e9', 19),
+                ('document_chunks', 'documentos_rag', 'vector-polyline', '#a855f7', 20),
+                ('economic_series', 'economia', 'chart-line', '#0ea5e9', 22),
+                ('economic_observations', 'economia', 'table-clock', '#14b8a6', 23),
+                ('mandates', 'legislativo', 'calendar-range', '#8b5cf6', 25)
+        ) AS expected(collection, expected_group, expected_icon, expected_color, expected_sort)
         LEFT JOIN directus_collections dc ON dc.collection = expected.collection
         WHERE dc.collection IS NULL
            OR COALESCE(dc."group", '') <> expected.expected_group
            OR COALESCE(dc.icon, '') <> expected.expected_icon
            OR COALESCE(dc.color, '') <> expected.expected_color
+           OR COALESCE(dc.sort, -1) <> expected.expected_sort
     ) THEN
         RAISE EXCEPTION 'Directus collection organization is incomplete';
     END IF;
@@ -301,7 +312,10 @@ BEGIN
           'claims',
           'documents',
           'document_versions',
-          'document_chunks'
+          'document_chunks',
+          'economic_series',
+          'economic_observations',
+          'mandates'
       );
 
     SELECT count(*) INTO actual_directus_field_count
@@ -316,7 +330,10 @@ BEGIN
         'claims',
         'documents',
         'document_versions',
-        'document_chunks'
+        'document_chunks',
+        'economic_series',
+        'economic_observations',
+        'mandates'
     );
 
     IF expected_directus_field_count <> actual_directus_field_count THEN
