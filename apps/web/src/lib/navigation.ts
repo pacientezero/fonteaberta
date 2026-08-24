@@ -19,6 +19,15 @@ export function candidateAssetsRoute(sqCandidato: string): string {
   return `${candidateRoute(sqCandidato)}/bens`;
 }
 
+export function documentsRoute(query?: string): string {
+  if (!query) {
+    return '/documentos';
+  }
+
+  const params = new URLSearchParams({ q: query });
+  return `/documentos?${params.toString()}`;
+}
+
 export function sourcesRoute(): string {
   return '/fontes';
 }

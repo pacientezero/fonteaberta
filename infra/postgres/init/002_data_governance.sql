@@ -176,15 +176,13 @@ INSERT INTO directus_collections (
     accountability,
     versioning,
     status,
-    sort
+    sort,
+    icon,
+    color
 ) VALUES
-    ('sources', 'Canonical source registry', false, false, true, 'open', 'all', false, 'active', 1),
-    ('datasets', 'Canonical dataset catalog', false, false, true, 'open', 'all', false, 'active', 2),
-    ('ingestion_runs', 'Ingestion run history', false, false, true, 'open', 'all', false, 'active', 3),
-    ('raw_records', 'Raw ingestion records', false, false, true, 'open', 'all', false, 'active', 4),
-    ('evidence', 'Evidence records tied to raw records', false, false, true, 'open', 'all', false, 'active', 5),
-    ('facts', 'Normalized facts', false, false, true, 'open', 'all', false, 'active', 6),
-    ('claims', 'Claims with provenance', false, false, true, 'open', 'all', false, 'active', 7)
+    ('catalogo', 'Folder for source and dataset registries', false, false, false, 'open', 'all', false, 'active', 0, 'folder', '#475569'),
+    ('ingestao', 'Folder for ingestion run history', false, false, false, 'open', 'all', false, 'active', 3, 'folder', '#d97706'),
+    ('proveniencia', 'Folder for raw records, evidence, facts, and claims', false, false, false, 'open', 'all', false, 'active', 5, 'folder', '#059669')
 ON CONFLICT (collection) DO UPDATE
 SET
     note = EXCLUDED.note,
@@ -195,7 +193,46 @@ SET
     accountability = EXCLUDED.accountability,
     versioning = EXCLUDED.versioning,
     status = EXCLUDED.status,
-    sort = EXCLUDED.sort;
+    sort = EXCLUDED.sort,
+    icon = EXCLUDED.icon,
+    color = EXCLUDED.color;
+
+INSERT INTO directus_collections (
+    collection,
+    note,
+    hidden,
+    singleton,
+    archive_app_filter,
+    collapse,
+    accountability,
+    versioning,
+    status,
+    sort,
+    "group",
+    icon,
+    color
+) VALUES
+    ('sources', 'Canonical source registry', false, false, true, 'open', 'all', false, 'active', 1, 'catalogo', 'database', '#2563eb'),
+    ('datasets', 'Canonical dataset catalog', false, false, true, 'open', 'all', false, 'active', 2, 'catalogo', 'table', '#14b8a6'),
+    ('ingestion_runs', 'Ingestion run history', false, false, true, 'open', 'all', false, 'active', 4, 'ingestao', 'sync', '#d97706'),
+    ('raw_records', 'Raw ingestion records', false, false, true, 'open', 'all', false, 'active', 6, 'proveniencia', 'archive', '#64748b'),
+    ('evidence', 'Evidence records tied to raw records', false, false, true, 'open', 'all', false, 'active', 7, 'proveniencia', 'shield-check', '#10b981'),
+    ('facts', 'Normalized facts', false, false, true, 'open', 'all', false, 'active', 8, 'proveniencia', 'function', '#059669'),
+    ('claims', 'Claims with provenance', false, false, true, 'open', 'all', false, 'active', 9, 'proveniencia', 'comment-text-outline', '#8b5cf6')
+ON CONFLICT (collection) DO UPDATE
+SET
+    note = EXCLUDED.note,
+    hidden = EXCLUDED.hidden,
+    singleton = EXCLUDED.singleton,
+    archive_app_filter = EXCLUDED.archive_app_filter,
+    collapse = EXCLUDED.collapse,
+    accountability = EXCLUDED.accountability,
+    versioning = EXCLUDED.versioning,
+    status = EXCLUDED.status,
+    sort = EXCLUDED.sort,
+    "group" = EXCLUDED."group",
+    icon = EXCLUDED.icon,
+    color = EXCLUDED.color;
 
 WITH managed_tables(collection) AS (
     VALUES

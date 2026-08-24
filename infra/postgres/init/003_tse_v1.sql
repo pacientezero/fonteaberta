@@ -305,14 +305,11 @@ INSERT INTO directus_collections (
     accountability,
     versioning,
     status,
-    sort
+    sort,
+    icon,
+    color
 ) VALUES
-    ('people', 'Canonical person registry for candidate mapping', false, false, true, 'open', 'all', false, 'active', 8),
-    ('entity_aliases', 'Cross-source entity aliases', false, false, true, 'open', 'all', false, 'active', 9),
-    ('elections', 'Canonical elections registry', false, false, true, 'open', 'all', false, 'active', 10),
-    ('parties', 'Canonical party registry', false, false, true, 'open', 'all', false, 'active', 11),
-    ('candidates', 'Normalized candidate records', false, false, true, 'open', 'all', false, 'active', 12),
-    ('candidate_assets', 'Declared candidate assets', false, false, true, 'open', 'all', false, 'active', 13)
+    ('tse', 'Folder for election domain tables', false, false, false, 'open', 'all', false, 'active', 10, 'folder', '#2563eb')
 ON CONFLICT (collection) DO UPDATE
 SET
     note = EXCLUDED.note,
@@ -323,7 +320,45 @@ SET
     accountability = EXCLUDED.accountability,
     versioning = EXCLUDED.versioning,
     status = EXCLUDED.status,
-    sort = EXCLUDED.sort;
+    sort = EXCLUDED.sort,
+    icon = EXCLUDED.icon,
+    color = EXCLUDED.color;
+
+INSERT INTO directus_collections (
+    collection,
+    note,
+    hidden,
+    singleton,
+    archive_app_filter,
+    collapse,
+    accountability,
+    versioning,
+    status,
+    sort,
+    "group",
+    icon,
+    color
+) VALUES
+    ('people', 'Canonical person registry for candidate mapping', false, false, true, 'open', 'all', false, 'active', 11, 'tse', 'account-group', '#f97316'),
+    ('entity_aliases', 'Cross-source entity aliases', false, false, true, 'open', 'all', false, 'active', 12, 'tse', 'link-variant', '#6b7280'),
+    ('elections', 'Canonical elections registry', false, false, true, 'open', 'all', false, 'active', 13, 'tse', 'ballot', '#ef4444'),
+    ('parties', 'Canonical party registry', false, false, true, 'open', 'all', false, 'active', 14, 'tse', 'flag', '#ec4899'),
+    ('candidates', 'Normalized candidate records', false, false, true, 'open', 'all', false, 'active', 15, 'tse', 'account-tie', '#2563eb'),
+    ('candidate_assets', 'Declared candidate assets', false, false, true, 'open', 'all', false, 'active', 16, 'tse', 'cash-multiple', '#f59e0b')
+ON CONFLICT (collection) DO UPDATE
+SET
+    note = EXCLUDED.note,
+    hidden = EXCLUDED.hidden,
+    singleton = EXCLUDED.singleton,
+    archive_app_filter = EXCLUDED.archive_app_filter,
+    collapse = EXCLUDED.collapse,
+    accountability = EXCLUDED.accountability,
+    versioning = EXCLUDED.versioning,
+    status = EXCLUDED.status,
+    sort = EXCLUDED.sort,
+    "group" = EXCLUDED."group",
+    icon = EXCLUDED.icon,
+    color = EXCLUDED.color;
 
 WITH managed_tables(collection) AS (
     VALUES

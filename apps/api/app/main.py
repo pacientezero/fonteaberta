@@ -3,16 +3,22 @@ from datetime import datetime, timezone
 from fastapi import FastAPI, HTTPException
 
 from app.db import db_connection
+from app.documents_rag import (
+    hashed_embedding,
+    index_document_bundle,
+    query_documents,
+    resolve_query_scope,
+)
 from app.tse_v1 import fetch_candidate_summary
 
-app = FastAPI(title="FonteAberta AI Service", version="0.2.0")
+app = FastAPI(title="FonteAberta AI Service", version="0.3.0")
 
 
 @app.get("/")
 def root() -> dict[str, str]:
     return {
         "service": "fonteaberta-ai",
-        "phase": "02-tse-v1",
+        "phase": "04-documents-rag",
         "status": "ok",
     }
 
@@ -32,3 +38,41 @@ def tse_candidate(sq_candidato: str) -> dict[str, object]:
             return fetch_candidate_summary(connection, sq_candidato)
         except KeyError as exc:
             raise HTTPException(status_code=404, detail="Candidate not found") from exc
+
+
+@app.post("/v1/entities/resolve")
+def resolve_entities(payload: dict[str, object]) -> dict[str, object]:
+    question = str(payload.get("question", "")).strip()
+    if not question:
+        raise HTTPException(status_code=400, detail="question is required")
+    return resolve_query_scope(question)
+
+
+@app.post("/v1/embed")
+def embed(payload: dict[str, object]) -> dict[str, object]:
+    texts = payload.get("texts")
+    if not isinstance(texts, list) or not texts:
+        raise HTTPException(status_code=400, detail="texts must be a non-empty list")
+    return {
+        "model": "hashed-bow",
+        "dimension": 384,
+        "embeddings": [hashed_embedding(str(text)) for text in texts],
+    }
+
+
+@app.post("/v1/documents/index")
+def index_documents(payload: dict[str, object]) -> dict[str, object]:
+    if "source" not in payload or "document" not in payload or "version" not in payload:
+        raise HTTPException(status_code=400, detail="source, document and version are required")
+    with db_connection() as connection:
+        return index_document_bundle(connection, payload)
+
+
+@app.post("/v1/query")
+def rag_query(payload: dict[str, object]) -> dict[str, object]:
+    question = str(payload.get("question", "")).strip()
+    if not question:
+        raise HTTPException(status_code=400, detail="question is required")
+    limit = int(payload.get("limit", 5))
+    with db_connection() as connection:
+        return query_documents(connection, question, limit=limit)

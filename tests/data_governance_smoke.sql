@@ -28,7 +28,7 @@ BEGIN
         metadata
     ) VALUES (
         'Tribunal Superior Eleitoral',
-        'tse',
+        'smoke-tse-governance',
         'Tribunal Superior Eleitoral',
         'https://dadosabertos.tse.jus.br/',
         'https://dadosabertos.tse.jus.br/',
@@ -58,8 +58,8 @@ BEGIN
     ) VALUES (
         smoke_source_id,
         'Candidatos 2026',
-        'candidatos-2026',
-        'candidatos-2026',
+        'smoke-candidatos-2026',
+        'smoke-candidatos-2026',
         'csv',
         'https://dadosabertos.tse.jus.br/dataset/candidatos-2026',
         'federal',
@@ -231,18 +231,61 @@ BEGIN
         SELECT 1
         FROM (
             VALUES
+                ('catalogo'),
+                ('ingestao'),
+                ('proveniencia'),
+                ('tse'),
+                ('documentos_rag'),
                 ('sources'),
                 ('datasets'),
                 ('ingestion_runs'),
                 ('raw_records'),
                 ('evidence'),
                 ('facts'),
-                ('claims')
+                ('claims'),
+                ('documents'),
+                ('document_versions'),
+                ('document_chunks')
         ) AS managed(collection)
         LEFT JOIN directus_collections dc ON dc.collection = managed.collection
         WHERE dc.collection IS NULL
     ) THEN
         RAISE EXCEPTION 'Managed Directus collections are missing';
+    END IF;
+
+    IF EXISTS (
+        SELECT 1
+        FROM (
+            VALUES
+                ('catalogo', '', 'folder', '#475569'),
+                ('ingestao', '', 'folder', '#d97706'),
+                ('proveniencia', '', 'folder', '#059669'),
+                ('tse', '', 'folder', '#2563eb'),
+                ('documentos_rag', '', 'folder', '#0ea5e9'),
+                ('sources', 'catalogo', 'database', '#2563eb'),
+                ('datasets', 'catalogo', 'table', '#14b8a6'),
+                ('ingestion_runs', 'ingestao', 'sync', '#d97706'),
+                ('raw_records', 'proveniencia', 'archive', '#64748b'),
+                ('evidence', 'proveniencia', 'shield-check', '#10b981'),
+                ('facts', 'proveniencia', 'function', '#059669'),
+                ('claims', 'proveniencia', 'comment-text-outline', '#8b5cf6'),
+                ('people', 'tse', 'account-group', '#f97316'),
+                ('entity_aliases', 'tse', 'link-variant', '#6b7280'),
+                ('elections', 'tse', 'ballot', '#ef4444'),
+                ('parties', 'tse', 'flag', '#ec4899'),
+                ('candidates', 'tse', 'account-tie', '#2563eb'),
+                ('candidate_assets', 'tse', 'cash-multiple', '#f59e0b'),
+                ('documents', 'documentos_rag', 'file-document-multiple', '#06b6d4'),
+                ('document_versions', 'documentos_rag', 'file-clock', '#0ea5e9'),
+                ('document_chunks', 'documentos_rag', 'vector-polyline', '#a855f7')
+        ) AS expected(collection, expected_group, expected_icon, expected_color)
+        LEFT JOIN directus_collections dc ON dc.collection = expected.collection
+        WHERE dc.collection IS NULL
+           OR COALESCE(dc."group", '') <> expected.expected_group
+           OR COALESCE(dc.icon, '') <> expected.expected_icon
+           OR COALESCE(dc.color, '') <> expected.expected_color
+    ) THEN
+        RAISE EXCEPTION 'Directus collection organization is incomplete';
     END IF;
 
     SELECT count(*) INTO expected_directus_field_count
@@ -255,7 +298,10 @@ BEGIN
           'raw_records',
           'evidence',
           'facts',
-          'claims'
+          'claims',
+          'documents',
+          'document_versions',
+          'document_chunks'
       );
 
     SELECT count(*) INTO actual_directus_field_count
@@ -267,7 +313,10 @@ BEGIN
         'raw_records',
         'evidence',
         'facts',
-        'claims'
+        'claims',
+        'documents',
+        'document_versions',
+        'document_chunks'
     );
 
     IF expected_directus_field_count <> actual_directus_field_count THEN

@@ -45,6 +45,7 @@ services:
     environment:
       KEY: ${DIRECTUS_KEY:-0123456789abcdef0123456789abcdef}
       SECRET: ${DIRECTUS_SECRET:-abcdef0123456789abcdef0123456789}
+      LICENSE_KEY: ${LICENSE_KEY:-${DIRECTUS_LICENSE:-}}
       DB_CLIENT: pg
       DB_HOST: postgres
       DB_PORT: 5432
@@ -152,7 +153,7 @@ services:
     ports:
       - "4173:4173"
     environment:
-      PUBLIC_API_BASE_URL: ${PUBLIC_API_BASE_URL:-http://localhost:8000}
+      PUBLIC_API_BASE_URL: http://api:8000
     healthcheck:
       test:
         [

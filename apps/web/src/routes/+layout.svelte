@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { homeRoute, searchRoute, sourcesRoute } from '$lib/navigation';
+  import { documentsRoute, homeRoute, searchRoute, sourcesRoute } from '$lib/navigation';
 </script>
 
 <svelte:head>
@@ -16,6 +16,7 @@
     <nav class="topnav" aria-label="Principal">
       <a href={homeRoute()}>Inicio</a>
       <a href={searchRoute()}>Busca</a>
+      <a href={documentsRoute()}>Documentos</a>
       <a href={sourcesRoute()}>Fontes</a>
     </nav>
   </header>

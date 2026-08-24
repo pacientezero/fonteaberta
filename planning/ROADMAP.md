@@ -7,8 +7,8 @@ Entregar a V1 da plataforma com base em dados publicos oficiais, provenance audi
 ## Estado atual
 
 - Repo Git criado e publicado em GitHub.
-- Branch de trabalho atual: `feature/01-bootstrap`.
-- Fase 00 bootstrap concluida e validada localmente na branch de trabalho.
+- Branch de trabalho atual: `feature/05-documents-rag`.
+- Fases 00 a 04 concluidas e validadas localmente na branch de trabalho.
 - `AGENTS.md` define o contrato operacional.
 - `issues/` contem o backlog em 7 issues.
 - `phases/` contem a ordem de execucao por fase.
@@ -160,4 +160,4 @@ Criterio de aceite:
 
 ## Proxima acao recomendada
 
-Abrir a branch e executar a [Issue 01](../issues/01-bootstrap.md) como primeiro ciclo de implementacao.
+Abrir a branch da [Issue 06](../issues/06-expansion.md) assim que a Issue 05 estiver consolidada na branch principal.

@@ -46,6 +46,7 @@ cp .env.example .env
 ```
 
 O arquivo `.env` fica fora do Git. Ajuste somente o que precisar para sua maquina local.
+Se voce tiver uma licenca do Directus, coloque-a em `DIRECTUS_LICENSE` no `.env`.
 
 ### 3. Validar o compose
 
