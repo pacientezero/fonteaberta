@@ -7,8 +7,8 @@ Entregar a V1 da plataforma com base em dados publicos oficiais, provenance audi
 ## Estado atual
 
 - Repo Git criado e publicado em GitHub.
-- Branch de trabalho atual: `feature/05-documents-rag`.
-- Fases 00 a 04 concluidas e validadas localmente na branch de trabalho.
+- Branch de trabalho atual: `feature/06-expansion`.
+- Fases 00 a 05 concluidas e validadas localmente na branch de trabalho.
 - `AGENTS.md` define o contrato operacional.
 - `issues/` contem o backlog em 7 issues.
 - `phases/` contem a ordem de execucao por fase.

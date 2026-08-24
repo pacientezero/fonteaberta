@@ -22,6 +22,7 @@ The admin sidebar is grouped as:
 - `proveniencia`: `raw_records`, `evidence`, `facts`, `claims`
 - `tse`: `people`, `entity_aliases`, `elections`, `parties`, `candidates`, `candidate_assets`
 - `documentos_rag`: `documents`, `document_versions`, `document_chunks`
+- `economia`: `economic_series`, `economic_observations`
 
 `claims_evidence` stays a technical join table and is intentionally not managed as a Directus collection because the Directus runtime ignores tables without a primary key.
 

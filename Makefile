@@ -1,6 +1,6 @@
 COMPOSE ?= docker compose
 
-.PHONY: bootstrap check migrate-governance check-governance migrate-tse-v1 check-tse-v1 migrate-documents-rag check-documents-rag up down ps logs
+.PHONY: bootstrap check migrate-governance check-governance migrate-tse-v1 check-tse-v1 migrate-documents-rag check-documents-rag migrate-expansion-bcb check-expansion-bcb up down ps logs
 
 bootstrap:
 	@printf '%s\n' 'Bootstrap is represented by the tracked repo structure, compose file, and service skeletons.'
@@ -25,6 +25,12 @@ migrate-documents-rag:
 
 check-documents-rag:
 	$(COMPOSE) run --rm --no-deps -v $(CURDIR):/workspace -w /workspace api python3 scripts/check-documents-rag.py
+
+migrate-expansion-bcb:
+	$(COMPOSE) exec -T postgres psql -U $${POSTGRES_USER:-fonteaberta} -d $${POSTGRES_DB:-fonteaberta} -v ON_ERROR_STOP=1 -f /docker-entrypoint-initdb.d/005_expansion_bcb.sql
+
+check-expansion-bcb:
+	$(COMPOSE) run --rm --no-deps -v $(CURDIR):/workspace -w /workspace api python3 scripts/check-expansion-bcb.py
 
 up:
 	$(COMPOSE) up --build

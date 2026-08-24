@@ -9,6 +9,7 @@ from app.documents_rag import (
     query_documents,
     resolve_query_scope,
 )
+from app.bcb_expansion import fetch_series_summary, query_observation_response
 from app.tse_v1 import fetch_candidate_summary
 
 app = FastAPI(title="FonteAberta AI Service", version="0.3.0")
@@ -18,7 +19,7 @@ app = FastAPI(title="FonteAberta AI Service", version="0.3.0")
 def root() -> dict[str, str]:
     return {
         "service": "fonteaberta-ai",
-        "phase": "04-documents-rag",
+        "phase": "05-expansion",
         "status": "ok",
     }
 
@@ -76,3 +77,21 @@ def rag_query(payload: dict[str, object]) -> dict[str, object]:
     limit = int(payload.get("limit", 5))
     with db_connection() as connection:
         return query_documents(connection, question, limit=limit)
+
+
+@app.get("/v1/economic/bcb/selic")
+def bcb_selic_summary() -> dict[str, object]:
+    with db_connection() as connection:
+        try:
+            return fetch_series_summary(connection)
+        except KeyError as exc:
+            raise HTTPException(status_code=404, detail="Selic series not found") from exc
+
+
+@app.get("/v1/economic/bcb/selic/{observation_date}")
+def bcb_selic_observation(observation_date: str) -> dict[str, object]:
+    with db_connection() as connection:
+        try:
+            return query_observation_response(connection, observation_date)
+        except KeyError as exc:
+            raise HTTPException(status_code=404, detail="Selic series not found") from exc
