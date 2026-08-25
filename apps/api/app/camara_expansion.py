@@ -16,6 +16,7 @@ from app.bcb_expansion import (
     parse_iso_date,
     parse_iso_datetime,
     payload_hash,
+    upsert_claim_evidence,
 )
 from app.tse_v1 import normalize_name
 
@@ -537,6 +538,19 @@ def upsert_current_mandate_fact(
         ("person", person_id, "current_mandate", mandate["id"]),
     )
     if existing is not None:
+        if existing["evidence_id"] != evidence_id:
+            existing = _fetch_one(
+                conn,
+                """
+                UPDATE facts
+                SET evidence_id = %s
+                WHERE id = %s
+                RETURNING id, subject_type, subject_id, predicate, object_type, object_id, value_text, value_numeric,
+                          value_boolean, value_date, unit, effective_date, source_id, evidence_id, calculation_method,
+                          metadata, created_at
+                """,
+                (evidence_id, existing["id"]),
+            )
         return existing
 
     return _fetch_one(
@@ -684,6 +698,7 @@ def ingest_official_bundle(conn, bundle: Mapping[str, Any], *, source_checksum_v
     mandates: list[dict[str, Any]] = []
     facts: list[dict[str, Any]] = []
     claims: list[dict[str, Any]] = []
+    claim_evidences: list[dict[str, Any]] = []
     for deputy_bundle in bundle["selected_deputies"]:
         person = ensure_person(conn, source["id"], deputy_bundle)
         mandate = ensure_mandate(
@@ -706,10 +721,12 @@ def ingest_official_bundle(conn, bundle: Mapping[str, Any], *, source_checksum_v
             mandate=mandate,
             fact_id=fact["id"],
         )
+        claim_evidence = upsert_claim_evidence(conn, claim["id"], evidence["id"])
         people.append(person)
         mandates.append(mandate)
         facts.append(fact)
         claims.append(claim)
+        claim_evidences.append(claim_evidence)
 
     return {
         "source": source,
@@ -721,6 +738,7 @@ def ingest_official_bundle(conn, bundle: Mapping[str, Any], *, source_checksum_v
         "mandates": mandates,
         "facts": facts,
         "claims": claims,
+        "claim_evidences": claim_evidences,
     }
 
 

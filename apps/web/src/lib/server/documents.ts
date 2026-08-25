@@ -1,4 +1,4 @@
-import { env } from '$env/dynamic/public';
+import { getApiBaseUrl } from '$lib/server/api';
 
 export type JsonRecord = Record<string, unknown>;
 
@@ -37,7 +37,7 @@ export interface DocumentQueryResult {
   status: string;
 }
 
-const API_BASE_URL = env.PUBLIC_API_BASE_URL || 'http://localhost:8000';
+const API_BASE_URL = getApiBaseUrl();
 
 async function fetchJson<T>(fetchFn: typeof fetch, path: string, init?: RequestInit): Promise<T> {
   const response = await fetchFn(`${API_BASE_URL}${path}`, {

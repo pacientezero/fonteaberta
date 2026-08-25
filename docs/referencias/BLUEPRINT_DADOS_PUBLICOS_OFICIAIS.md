@@ -3010,23 +3010,13 @@ Obrigatório:
 
 Projeto open source.
 
-Avaliar:
+A licença final do projeto é:
 
 ```text
 AGPL-3.0
 ```
 
-se a intenção for obrigar derivados oferecidos como serviço a publicar modificações.
-
-Ou:
-
-```text
-Apache-2.0
-```
-
-se a prioridade for adoção empresarial mais permissiva.
-
-A decisão final da licença deve ser explícita antes da primeira release.
+Ela obriga derivados oferecidos como serviço a publicar modificações, o que combina com o contrato de provenance auditável e com o objetivo de manter o sistema aberto ao longo do uso em rede.
 
 ---
 

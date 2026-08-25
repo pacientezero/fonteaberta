@@ -1,0 +1,196 @@
+{
+  "source": {
+    "name": "Portal da Transparência / CGU",
+    "slug": "transparencia",
+    "institution": "Controladoria-Geral da União",
+    "description": "Portal oficial de dados abertos da CGU / Portal da Transparência",
+    "base_url": "https://portaldatransparencia.gov.br/",
+    "documentation_url": "https://portaldatransparencia.gov.br/api-de-dados",
+    "source_type": "official_registry",
+    "scope": "federal",
+    "official": true,
+    "update_frequency": "monthly",
+    "license": "open data",
+    "enabled": true,
+    "metadata": {
+      "portal_url": "https://portaldatransparencia.gov.br/",
+      "api_docs_url": "https://portaldatransparencia.gov.br/api-de-dados",
+      "bulk_download_page": "https://portaldatransparencia.gov.br/download-de-dados/despesas-execucao"
+    }
+  },
+  "dataset": {
+    "name": "Despesas Execucao - 2026-08",
+    "slug": "despesas-execucao-2026-08",
+    "external_id": "despesas-execucao-202608",
+    "format": "csv",
+    "resource_url": "https://portaldatransparencia.gov.br/download-de-dados/despesas-execucao/202608",
+    "scope": "federal",
+    "period_start": "2026-08-01",
+    "period_end": "2026-08-31",
+    "update_frequency": "monthly",
+    "enabled": true,
+    "metadata": {
+      "portal_url": "https://portaldatransparencia.gov.br/",
+      "bulk_download_page": "https://portaldatransparencia.gov.br/download-de-dados/despesas-execucao",
+      "zip_url": "https://dadosabertos-download.cgu.gov.br/PortalDaTransparencia/saida/despesas-execucao/202608_Despesas.zip",
+      "csv_url": "https://dadosabertos-download.cgu.gov.br/PortalDaTransparencia/saida/despesas-execucao/202608_Despesas.csv",
+      "source_file": "202608_Despesas.csv",
+      "slice": "validated_sample"
+    }
+  },
+  "expense_month": "2026-08-01",
+  "expenses": [
+    {
+      "expense_month": "2026-08-01",
+      "superior_org_code": "26000",
+      "superior_org_name": "Ministério da Educação",
+      "subordinate_org_code": "26428",
+      "subordinate_org_name": "Instituto Federal de Educação, Ciência e Tecnologia de Brasília",
+      "managing_unit_code": "158501",
+      "managing_unit_name": "IFB - CAMPUS PLANALTINA",
+      "management_code": "26428",
+      "management_name": "INST.FED.DE EDUC.,CIENC.E TEC.DE BRASILIA",
+      "budget_unit_code": "26428",
+      "budget_unit_name": "INST.FED.DE EDUC.,CIENC.E TEC.DE BRASILIA",
+      "function_code": "12",
+      "function_name": "Educação",
+      "subfunction_code": "363",
+      "subfunction_name": "Ensino profissional",
+      "budget_program_code": "5112",
+      "budget_program_name": "EDUCACAO PROFISSIONAL E TECNOLOGICA QUE TRANSFORMA",
+      "action_code": "2994",
+      "action_name": "ASSISTENCIA AOS ESTUDANTES DA REDE FEDERAL DE EDUCACAO PROFISSIONAL, CIENTIFICA E TECNOLOGICA",
+      "planning_code": "0000",
+      "planning_name": "ASSISTENCIA AOS ESTUDANTES DA REDE FEDERAL DE EDUCACAO PROFISSIONAL, CIENTIFICA E TECNOLOGICA - DESPESAS DIVERSAS",
+      "government_program_code": "00",
+      "government_program_name": "Sem informação",
+      "uf": "DF",
+      "municipality": null,
+      "subtitle_code": "29940053",
+      "subtitle_name": "ASSISTENCIA AOS ESTUDANTES DA REDE FE - NO DISTRITO FEDERAL",
+      "locator_code": "0053",
+      "locator_name": "ASSISTENCIA AOS ESTUDANTES DA REDE FE - NO DI",
+      "locator_sigla": "-1",
+      "locator_description": "Sem informação",
+      "amendment_author_code": null,
+      "amendment_author_name": "SEM EMENDA",
+      "economic_category_code": "3",
+      "economic_category_name": "DESPESAS CORRENTES",
+      "expense_group_code": "3",
+      "expense_group_name": "Outras Despesas Correntes",
+      "expense_element_code": "30",
+      "expense_element_name": "Material de Consumo",
+      "expense_modality_code": "90",
+      "expense_modality_name": "Aplicações Diretas",
+      "committed_amount": "45661.77",
+      "liquidated_amount": "47069.83",
+      "paid_amount": "30401.44",
+      "restos_apagar_inscritos_amount": "0.00",
+      "restos_apagar_cancelados_amount": "0.00",
+      "restos_apagar_pagos_amount": "0.00",
+      "source_updated_at": "2026-08-24T00:00:00Z",
+      "collected_at": "2026-08-24T00:00:00Z",
+      "metadata": {
+        "row_index": 1,
+        "source_file": "202608_Despesas.csv"
+      }
+    },
+    {
+      "expense_month": "2026-08-01",
+      "superior_org_code": "26000",
+      "superior_org_name": "Ministério da Educação",
+      "subordinate_org_code": "26236",
+      "subordinate_org_name": "Universidade Federal Fluminense",
+      "managing_unit_code": "153058",
+      "managing_unit_name": "PRO-REITORIA DE ASSUNTOS ESTUDANTIS",
+      "management_code": "15227",
+      "management_name": "UNIVERSIDADE FEDERAL FLUMINENSE",
+      "budget_unit_code": "26236",
+      "budget_unit_name": "UNIVERSIDADE FEDERAL FLUMINENSE",
+      "function_code": "12",
+      "function_name": "Educação",
+      "subfunction_code": "364",
+      "subfunction_name": "Ensino superior",
+      "budget_program_code": "5113",
+      "budget_program_name": "EDUCACAO SUPERIOR: QUALIDADE, DEMOCRACIA, EQUIDADE E SUSTENTABILIDADE",
+      "action_code": "4002",
+      "action_name": "ASSISTENCIA AO ESTUDANTE DE ENSINO SUPERIOR",
+      "planning_code": "0002",
+      "planning_name": "PNAES - DESPESAS DIVERSAS",
+      "government_program_code": "00",
+      "government_program_name": "Sem informação",
+      "uf": "RJ",
+      "municipality": null,
+      "subtitle_code": "40020033",
+      "subtitle_name": "ASSISTENCIA AO ESTUDANTE DE ENSINO SU - NO ESTADO DO RIO DE",
+      "locator_code": "0033",
+      "locator_name": "ASSISTENCIA AO ESTUDANTE DE ENSINO SU - NO ES",
+      "locator_sigla": "-1",
+      "locator_description": "Sem informação",
+      "amendment_author_code": null,
+      "amendment_author_name": "SEM EMENDA",
+      "economic_category_code": "3",
+      "economic_category_name": "DESPESAS CORRENTES",
+      "expense_group_code": "3",
+      "expense_group_name": "Outras Despesas Correntes",
+      "expense_element_code": "30",
+      "expense_element_name": "Material de Consumo",
+      "expense_modality_code": "90",
+      "expense_modality_name": "Aplicações Diretas",
+      "committed_amount": "446272.91",
+      "liquidated_amount": "398750.85",
+      "paid_amount": "169688.22",
+      "restos_apagar_inscritos_amount": "0.00",
+      "restos_apagar_cancelados_amount": "160065.19",
+      "restos_apagar_pagos_amount": "122433.25",
+      "source_updated_at": "2026-08-24T00:00:00Z",
+      "collected_at": "2026-08-24T00:00:00Z",
+      "metadata": {
+        "row_index": 2,
+        "source_file": "202608_Despesas.csv"
+      }
+    }
+  ],
+  "ingestion_run": {
+    "started_at": "2026-08-24T00:00:00Z",
+    "finished_at": "2026-08-24T00:00:00Z",
+    "metadata": {
+      "source": "portal-da-transparencia-bulk",
+      "retrieval_intent": "official_transparency_expenses_demo"
+    }
+  },
+  "raw_record": {
+    "external_id": "despesas-execucao-202608",
+    "source_updated_at": "2026-08-24T00:00:00Z",
+    "collected_at": "2026-08-24T00:00:00Z",
+    "metadata": {
+      "source": "portaldatransparencia.gov.br",
+      "endpoint": "download-de-dados/despesas-execucao/202608",
+      "source_file": "202608_Despesas.csv",
+      "retrieval_mode": "official_csv_zip"
+    }
+  },
+  "evidence": {
+    "external_id": "despesas-execucao-202608-evidence",
+    "source_url": "https://portaldatransparencia.gov.br/download-de-dados/despesas-execucao/202608",
+    "section": "Despesas Execucao",
+    "collected_at": "2026-08-24T00:00:00Z",
+    "metadata": {
+      "source_file": "202608_Despesas.csv",
+      "slice": "validated_sample"
+    }
+  },
+  "checks": [
+    {
+      "expense_month": "2026-08-01",
+      "expected_row_count": 2,
+      "expected_paid_amount": "200089.66"
+    }
+  ],
+  "negative_checks": [
+    {
+      "expense_month": "2026-07-01",
+      "expected_status": "no_evidence"
+    }
+  ]
+}

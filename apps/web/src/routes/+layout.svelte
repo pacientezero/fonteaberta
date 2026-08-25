@@ -1,5 +1,13 @@
 <script lang="ts">
-  import { documentsRoute, homeRoute, searchRoute, sourcesRoute } from '$lib/navigation';
+  import {
+    dataRoute,
+    documentsRoute,
+    legislativeRoute,
+    homeRoute,
+    methodologyRoute,
+    searchRoute,
+    sourcesRoute,
+  } from '$lib/navigation';
 </script>
 
 <svelte:head>
@@ -17,7 +25,10 @@
       <a href={homeRoute()}>Inicio</a>
       <a href={searchRoute()}>Busca</a>
       <a href={documentsRoute()}>Documentos</a>
+      <a href={legislativeRoute()}>Legislativo</a>
       <a href={sourcesRoute()}>Fontes</a>
+      <a href={dataRoute()}>Dados</a>
+      <a href={methodologyRoute()}>Metodologia</a>
     </nav>
   </header>
 

@@ -144,7 +144,7 @@ INSERT INTO directus_collections (
     icon,
     color
 ) VALUES
-    ('documentos', 'Folder for document and retrieval tables', false, false, false, 'open', 'all', false, 'active', 17, 'file-document-multiple', '#0ea5e9')
+    ('documentos', 'Pasta para documentos e tabelas de recuperação', false, false, false, 'open', 'all', false, 'active', 17, 'book-open-page-variant', '#0ea5e9')
 ON CONFLICT (collection) DO UPDATE
 SET
     note = EXCLUDED.note,
@@ -181,9 +181,9 @@ INSERT INTO directus_collections (
     icon,
     color
 ) VALUES
-    ('documents', 'Canonical document registry', false, false, true, 'open', 'all', false, 'active', 18, 'documentos', 'file-document-multiple', '#06b6d4'),
-    ('document_versions', 'Document version history', false, false, true, 'open', 'all', false, 'active', 19, 'documentos', 'file-clock', '#0ea5e9'),
-    ('document_chunks', 'Chunked document embeddings', false, false, true, 'open', 'all', false, 'active', 20, 'documentos', 'vector-polyline', '#a855f7')
+    ('documents', 'Cadastro canônico de documentos', false, false, true, 'open', 'all', false, 'active', 18, 'documentos', 'file-document-multiple', '#06b6d4'),
+    ('document_versions', 'Histórico de versões de documentos', false, false, true, 'open', 'all', false, 'active', 19, 'documentos', 'file-clock', '#0ea5e9'),
+    ('document_chunks', 'Chunks e embeddings de documentos', false, false, true, 'open', 'all', false, 'active', 20, 'documentos', 'vector-polyline', '#a855f7')
 ON CONFLICT (collection) DO UPDATE
 SET
     note = EXCLUDED.note,

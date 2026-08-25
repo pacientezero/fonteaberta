@@ -1414,6 +1414,37 @@ def fetch_candidate_summary(conn, candidate_external_id: str) -> dict[str, Any]:
     }
 
 
+def query_candidate_catalog_response(conn, limit: int = 20) -> dict[str, Any]:
+    limit = max(1, min(limit, 100))
+    rows = conn.execute(
+        """
+        SELECT c.external_id
+        FROM candidates AS c
+        JOIN elections AS e ON e.id = c.election_id
+        JOIN sources AS s ON s.id = c.source_id
+        WHERE s.slug = %s
+          AND e.year = 2026
+          AND c.position = 'PRESIDENTE'
+        ORDER BY c.collected_at DESC, c.external_id DESC
+        LIMIT %s
+        """,
+        (TSE_SOURCE_SLUG, limit),
+    ).fetchall()
+
+    candidates: list[dict[str, Any]] = []
+    for row in rows:
+        try:
+            candidates.append(fetch_candidate_summary(conn, row["external_id"]))
+        except KeyError:
+            continue
+
+    return {
+        "status": "ok",
+        "count": len(candidates),
+        "candidates": candidates,
+    }
+
+
 def ingest_bundle_from_path(conn, path: Path = DEFAULT_FIXTURE_PATH) -> dict[str, Any]:
     bundle = load_fixture_bundle(path)
     return ingest_official_bundle(conn, bundle, source_checksum_value=payload_hash(bundle))

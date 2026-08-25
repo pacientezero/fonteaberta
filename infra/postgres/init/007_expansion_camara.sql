@@ -54,7 +54,7 @@ INSERT INTO directus_collections (
     icon,
     color
 ) VALUES
-    ('legislativo', 'Folder for parliamentary mandates and records', false, false, false, 'open', 'all', false, 'active', 24, 'gavel', '#7c3aed')
+    ('legislativo', 'Pasta para mandatos e registros parlamentares', false, false, false, 'open', 'all', false, 'active', 24, 'gavel', '#7c3aed')
 ON CONFLICT (collection) DO UPDATE
 SET
     note = EXCLUDED.note,
@@ -84,7 +84,7 @@ INSERT INTO directus_collections (
     icon,
     color
 ) VALUES
-    ('mandates', 'Current parliamentary mandates for Câmara deputies', false, false, true, 'open', 'all', false, 'active', 25, 'legislativo', 'calendar-range', '#8b5cf6')
+    ('mandates', 'Mandatos parlamentares atuais da Câmara', false, false, true, 'open', 'all', false, 'active', 25, 'legislativo', 'calendar-range', '#8b5cf6')
 ON CONFLICT (collection) DO UPDATE
 SET
     note = EXCLUDED.note,

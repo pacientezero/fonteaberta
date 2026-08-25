@@ -11,8 +11,8 @@ This repo is organized to avoid scope creep.
 | 02 | Deliver the TSE 2026 vertical | 01 | Completed |
 | 03 | Ship the public V1 UI | 01, 02 | Completed |
 | 04 | Add documents and RAG | 00, 01 | Completed |
-| 05 | Expand to legislature and transparency data | 01, 03, 04 | Planned |
-| 06 | Hardening, tests, observability, and release readiness | All prior phases | Planned |
+| 05 | Expand to legislature and transparency data | 01, 03, 04 | Completed |
+| 06 | Hardening, tests, observability, and release readiness | All prior phases | Completed |
 
 ## Rule
 

@@ -1,5 +1,5 @@
 import { error } from '@sveltejs/kit';
-import { env } from '$env/dynamic/public';
+import { getApiBaseUrl } from '$lib/server/api';
 
 export type JsonRecord = Record<string, unknown>;
 
@@ -161,7 +161,13 @@ export interface TseSummary {
   };
 }
 
-const API_BASE_URL = env.PUBLIC_API_BASE_URL || 'http://localhost:8000';
+export interface TseCandidateCatalogResponse {
+  status: string;
+  count: number;
+  candidates: TseSummary[];
+}
+
+const API_BASE_URL = getApiBaseUrl();
 export const FEATURED_SQ_CANDIDATO = '280002540694';
 
 async function fetchJson<T>(fetchFn: typeof fetch, path: string): Promise<T> {
@@ -182,4 +188,11 @@ export async function loadCandidateSummary(fetchFn: typeof fetch, sqCandidato: s
 
 export async function loadFeaturedCandidateSummary(fetchFn: typeof fetch): Promise<TseSummary> {
   return loadCandidateSummary(fetchFn, FEATURED_SQ_CANDIDATO);
+}
+
+export async function loadCandidateCatalog(
+  fetchFn: typeof fetch,
+  limit = 20,
+): Promise<TseCandidateCatalogResponse> {
+  return fetchJson<TseCandidateCatalogResponse>(fetchFn, `/tse/candidatos?limit=${limit}`);
 }

@@ -1,6 +1,7 @@
 # Issue 07 - Hardening and release readiness
 
 Phase: 06-hardening
+Status: completed
 
 ## Goal
 
@@ -29,3 +30,4 @@ Lock down correctness, observability, and release readiness.
 ## Notes
 
 - This is the last phase, not a cleanup bucket for unfinished basics.
+- Baseline security headers, cache policy, request IDs, and server timing are now verified locally.

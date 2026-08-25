@@ -6,6 +6,44 @@ Plataforma open source de dados publicos oficiais.
 
 O objetivo e entregar uma plataforma auditavel para dados publicos oficiais, com provenance, rastreio de origem e calculos reproduziveis.
 
+## O que e
+
+Uma plataforma open source para consultar, cruzar e auditar dados publicos oficiais brasileiros com fonte, dataset, evidencia e calculo reproduzivel.
+
+## O que nao e
+
+- Nao e agregador de noticias.
+- Nao e painel de opinioes ou resumos sem fonte.
+- Nao e um chatbot generico sem provenance.
+- Nao e substituto dos portais oficiais.
+
+## Arquitetura
+
+- `apps/web`: interface publica.
+- `apps/api`: servico factual e de recuperacao.
+- `infra/postgres`: schema, seeds e migrations.
+- `Directus`: organizacao editorial e leitura operacional dos dados.
+- `n8n` e `Kestra`: orquestracao e automacao.
+- `docs/referencias`: contrato de produto e analise tecnica.
+
+## Fontes
+
+O projeto prioriza fontes primarias e oficiais. A ordem de implementacao, os dominios e os slices de dados estao documentados em:
+
+- `docs/referencias/BLUEPRINT_DADOS_PUBLICOS_OFICIAIS.md`
+- `docs/referencias/AnaliseRAG.md`
+- `planning/ROADMAP.md`
+- `issues/EPICS.md`
+
+## Como criar connector
+
+1. Abrir uma issue dedicada para a nova fonte ou slice.
+2. Criar uma branch dedicada para essa issue.
+3. Registrar source, dataset, fixture e migration.
+4. Criar o script de validacao idempotente.
+5. Atualizar os checks e a documentacao da fase.
+6. Validar com `make check-*` antes de pedir merge.
+
 ## Referencias canonicas
 
 - `docs/referencias/BLUEPRINT_DADOS_PUBLICOS_OFICIAIS.md`
@@ -94,6 +132,14 @@ Este repo e open source, mas segue um fluxo estrito para manter rastreio:
 - Toda mudanca entra em `main` por merge de branch.
 - Preserve as branches depois do merge; nao delete sem pedido explicito.
 
+## Metodologia
+
+- Progresso por fatias verticais.
+- Fonte oficial antes de inferencia.
+- Provenance antes de resposta.
+- Evidencia antes de claim.
+- Nada entra em `main` sem branch e issue.
+
 ## Bootstrap
 
 Se quiser detalhes do que existe nesta fase inicial, leia `docs/bootstrap.md`.
@@ -113,3 +159,7 @@ Se quiser detalhes do que existe nesta fase inicial, leia `docs/bootstrap.md`.
 5. Phase 04 - Documents and RAG
 6. Phase 05 - Expansion
 7. Phase 06 - Hardening
+
+## Licenca
+
+O projeto e distribuido sob `AGPL-3.0`. Derivados expostos como servico tambem precisam publicar modificacoes.

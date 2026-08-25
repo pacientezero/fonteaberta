@@ -1,16 +1,24 @@
 import type { PageServerLoad } from './$types';
-import { loadFeaturedCandidateSummary } from '$lib/server/tse';
+import { loadCandidateCatalog, loadFeaturedCandidateSummary } from '$lib/server/tse';
 import { matchesSummary, normalizeSearchText } from '$lib/search';
 
 export const load: PageServerLoad = async ({ fetch, url }) => {
-  const summary = await loadFeaturedCandidateSummary(fetch);
+  const [summary, catalog] = await Promise.all([
+    loadFeaturedCandidateSummary(fetch),
+    loadCandidateCatalog(fetch, 20),
+  ]);
   const query = url.searchParams.get('q')?.trim() ?? '';
   const normalizedQuery = normalizeSearchText(query);
+  const candidates = normalizedQuery
+    ? catalog.candidates.filter((candidate) => matchesSummary(candidate, normalizedQuery))
+    : catalog.candidates;
 
   return {
     query,
     normalizedQuery,
     summary,
-    result: normalizedQuery && matchesSummary(summary, normalizedQuery) ? summary : null,
+    catalogCount: catalog.count,
+    candidates,
+    result: candidates[0] ?? null,
   };
 };

@@ -82,6 +82,48 @@ def _fetch_optional(conn, query: str, params: tuple[Any, ...]) -> dict[str, Any]
     return dict(row)
 
 
+def upsert_claim_evidence(conn, claim_id: str, evidence_id: str) -> dict[str, Any]:
+    existing = _fetch_optional(
+        conn,
+        """
+        SELECT claim_id, evidence_id, created_at
+        FROM claims_evidence
+        WHERE claim_id = %s
+          AND evidence_id = %s
+        LIMIT 1
+        """,
+        (claim_id, evidence_id),
+    )
+    if existing is not None:
+        if existing["evidence_id"] != evidence_id:
+            existing = _fetch_one(
+                conn,
+                """
+                UPDATE facts
+                SET evidence_id = %s
+                WHERE id = %s
+                RETURNING id, subject_type, subject_id, predicate, object_type, object_id, value_text, value_numeric,
+                          value_boolean, value_date, unit, effective_date, source_id, evidence_id, calculation_method,
+                          metadata, created_at
+                """,
+                (evidence_id, existing["id"]),
+            )
+        return existing
+
+    return _fetch_one(
+        conn,
+        """
+        INSERT INTO claims_evidence (
+            claim_id,
+            evidence_id
+        )
+        VALUES (%s, %s)
+        RETURNING claim_id, evidence_id, created_at
+        """,
+        (claim_id, evidence_id),
+    )
+
+
 def ensure_source(conn, source_payload: Mapping[str, Any]) -> dict[str, Any]:
     existing = _fetch_optional(
         conn,
@@ -664,6 +706,7 @@ def ingest_official_bundle(conn, bundle: Mapping[str, Any], *, source_checksum_v
         fact_id=fact["id"],
         series_payload=bundle["series"],
     )
+    claim_evidence = upsert_claim_evidence(conn, claim["id"], evidence["id"])
     return {
         "source": source,
         "dataset": dataset,
@@ -675,6 +718,7 @@ def ingest_official_bundle(conn, bundle: Mapping[str, Any], *, source_checksum_v
         "latest_observation": latest_observation,
         "fact": fact,
         "claim": claim,
+        "claim_evidence": claim_evidence,
     }
 
 

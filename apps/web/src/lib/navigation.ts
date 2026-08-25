@@ -4,11 +4,11 @@ export function homeRoute(): string {
 
 export function searchRoute(query?: string): string {
   if (!query) {
-    return '/buscar';
+    return '/busca';
   }
 
   const params = new URLSearchParams({ q: query });
-  return `/buscar?${params.toString()}`;
+  return `/busca?${params.toString()}`;
 }
 
 export function candidateRoute(sqCandidato: string): string {
@@ -30,4 +30,16 @@ export function documentsRoute(query?: string): string {
 
 export function sourcesRoute(): string {
   return '/fontes';
+}
+
+export function dataRoute(): string {
+  return '/dados';
+}
+
+export function methodologyRoute(): string {
+  return '/metodologia';
+}
+
+export function legislativeRoute(): string {
+  return '/legislativo';
 }

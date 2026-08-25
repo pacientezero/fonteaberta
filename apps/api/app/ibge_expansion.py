@@ -20,6 +20,7 @@ from app.bcb_expansion import (
     replace_observations,
     upsert_evidence,
     upsert_raw_record,
+    upsert_claim_evidence,
 )
 
 CURRENT_FILE = Path(__file__).resolve()
@@ -209,6 +210,19 @@ def upsert_summary_fact(
         ("economic_series", economic_series_id, "ipca_monthly_variation_december_2024", effective_date),
     )
     if existing is not None:
+        if existing["evidence_id"] != evidence_id:
+            existing = _fetch_one(
+                conn,
+                """
+                UPDATE facts
+                SET evidence_id = %s
+                WHERE id = %s
+                RETURNING id, subject_type, subject_id, predicate, object_type, object_id, value_text, value_numeric,
+                          value_boolean, value_date, unit, effective_date, source_id, evidence_id, calculation_method,
+                          metadata, created_at
+                """,
+                (evidence_id, existing["id"]),
+            )
         return existing
 
     formatted_rate = format_percent_value(latest_observation["value"] or Decimal("0"))
@@ -372,6 +386,7 @@ def ingest_official_bundle(conn, bundle: Mapping[str, Any], *, source_checksum_v
         fact_id=fact["id"],
         series_payload=bundle["series"],
     )
+    claim_evidence = upsert_claim_evidence(conn, claim["id"], evidence["id"])
     return {
         "source": source,
         "dataset": dataset,
@@ -383,6 +398,7 @@ def ingest_official_bundle(conn, bundle: Mapping[str, Any], *, source_checksum_v
         "latest_observation": latest_observation,
         "fact": fact,
         "claim": claim,
+        "claim_evidence": claim_evidence,
     }
 
 

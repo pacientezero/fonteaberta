@@ -36,6 +36,8 @@ Use the phase files as the execution plan and this file as the backlog index.
 - `issues/05-documents-rag.md`
 - `issues/06-expansion.md`
 - `issues/07-hardening.md`
+- `issues/08-camara-votes-coverage.md`
+- `issues/09-tse-full-coverage.md`
 
 ## Epicos
 
@@ -59,6 +61,8 @@ Use the phase files as the execution plan and this file as the backlog index.
 - Inclui: connector core, connector TSE, entity mapping e testes.
 - Depende de: EPIC 02.
 - Sai pronto quando: a pergunta sobre patrimonio do candidato responde com fonte oficial e calculo reproduzivel.
+- Issue 03 cobre o sample vertical inicial.
+- Issue 09 cobre a expansao para o conjunto completo de candidatos e bens do presidencial 2026.
 
 ### EPIC 04 - Frontend publico V1
 

@@ -180,9 +180,10 @@ INSERT INTO directus_collections (
     icon,
     color
 ) VALUES
-    ('catalogo', 'Folder for source and dataset registries', false, false, false, 'open', 'all', false, 'active', 0, 'database', '#475569'),
-    ('ingestao', 'Folder for ingestion run history', false, false, false, 'open', 'all', false, 'active', 3, 'sync', '#d97706'),
-    ('proveniencia', 'Folder for raw records, evidence, facts, and claims', false, false, false, 'open', 'all', false, 'active', 5, 'shield-check', '#059669')
+    ('catalogo', 'Pasta para catálogo de fontes e datasets', false, false, false, 'open', 'all', false, 'active', 0, 'database', '#475569'),
+    ('ingestao', 'Pasta para histórico de execuções de ingestão', false, false, false, 'open', 'all', false, 'active', 3, 'tray-arrow-down', '#d97706'),
+    ('proveniencia', 'Pasta para registros brutos, evidências, fatos e claims', false, false, false, 'open', 'all', false, 'active', 5, 'shield-check', '#059669'),
+    ('transparencia', 'Pasta reservada para o Portal da Transparência', false, false, false, 'open', 'all', false, 'active', 27, 'file-eye', '#0f766e')
 ON CONFLICT (collection) DO UPDATE
 SET
     note = EXCLUDED.note,
@@ -212,13 +213,13 @@ INSERT INTO directus_collections (
     icon,
     color
 ) VALUES
-    ('sources', 'Canonical source registry', false, false, true, 'open', 'all', false, 'active', 1, 'catalogo', 'database', '#2563eb'),
-    ('datasets', 'Canonical dataset catalog', false, false, true, 'open', 'all', false, 'active', 2, 'catalogo', 'table', '#14b8a6'),
-    ('ingestion_runs', 'Ingestion run history', false, false, true, 'open', 'all', false, 'active', 4, 'ingestao', 'sync', '#d97706'),
-    ('raw_records', 'Raw ingestion records', false, false, true, 'open', 'all', false, 'active', 6, 'proveniencia', 'archive', '#64748b'),
-    ('evidence', 'Evidence records tied to raw records', false, false, true, 'open', 'all', false, 'active', 7, 'proveniencia', 'shield-check', '#10b981'),
-    ('facts', 'Normalized facts', false, false, true, 'open', 'all', false, 'active', 8, 'proveniencia', 'calculator', '#059669'),
-    ('claims', 'Claims with provenance', false, false, true, 'open', 'all', false, 'active', 9, 'proveniencia', 'comment-text-outline', '#8b5cf6')
+    ('sources', 'Cadastro canônico de fontes oficiais', false, false, true, 'open', 'all', false, 'active', 1, 'catalogo', 'database', '#2563eb'),
+    ('datasets', 'Catálogo canônico de datasets', false, false, true, 'open', 'all', false, 'active', 2, 'catalogo', 'table', '#14b8a6'),
+    ('ingestion_runs', 'Histórico de execuções de ingestão', false, false, true, 'open', 'all', false, 'active', 4, 'ingestao', 'sync', '#d97706'),
+    ('raw_records', 'Registros brutos de ingestão', false, false, true, 'open', 'all', false, 'active', 6, 'proveniencia', 'archive', '#64748b'),
+    ('evidence', 'Evidências ligadas aos registros brutos', false, false, true, 'open', 'all', false, 'active', 7, 'proveniencia', 'shield-search', '#10b981'),
+    ('facts', 'Fatos normalizados', false, false, true, 'open', 'all', false, 'active', 8, 'proveniencia', 'calculator', '#059669'),
+    ('claims', 'Afirmações com proveniência', false, false, true, 'open', 'all', false, 'active', 9, 'proveniencia', 'comment-text-outline', '#8b5cf6')
 ON CONFLICT (collection) DO UPDATE
 SET
     note = EXCLUDED.note,
@@ -271,6 +272,21 @@ WHERE columns.table_schema = 'public'
         AND field = columns.column_name
   )
 ORDER BY columns.table_name, columns.ordinal_position;
+
+UPDATE directus_collections
+SET "group" = 'catalogo'
+WHERE "group" = 'cadastros';
+
+UPDATE directus_collections
+SET "group" = 'ingestao'
+WHERE "group" = 'operacao';
+
+UPDATE directus_collections
+SET "group" = 'proveniencia'
+WHERE "group" = 'auditoria';
+
+DELETE FROM directus_collections
+WHERE collection IN ('cadastros', 'operacao', 'auditoria');
 
 DO $$
 DECLARE

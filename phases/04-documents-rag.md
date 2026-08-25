@@ -1,6 +1,6 @@
 # Phase 04 - Documents and RAG
 
-Status: planned
+Status: completed
 
 ## Goal
 

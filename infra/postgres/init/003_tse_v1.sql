@@ -309,7 +309,7 @@ INSERT INTO directus_collections (
     icon,
     color
 ) VALUES
-    ('eleitoral', 'Folder for electoral domain tables', false, false, false, 'open', 'all', false, 'active', 10, 'ballot', '#2563eb')
+    ('eleicoes', 'Pasta para dados eleitorais e cadastro de pessoas', false, false, false, 'open', 'all', false, 'active', 10, 'ballot', '#2563eb')
 ON CONFLICT (collection) DO UPDATE
 SET
     note = EXCLUDED.note,
@@ -325,11 +325,11 @@ SET
     color = EXCLUDED.color;
 
 UPDATE directus_collections
-SET "group" = 'eleitoral'
-WHERE "group" = 'tse';
+SET "group" = 'eleicoes'
+WHERE "group" = 'eleitoral';
 
 DELETE FROM directus_collections
-WHERE collection = 'tse';
+WHERE collection = 'eleitoral';
 
 INSERT INTO directus_collections (
     collection,
@@ -346,12 +346,12 @@ INSERT INTO directus_collections (
     icon,
     color
 ) VALUES
-    ('people', 'Canonical person registry for candidate mapping', false, false, true, 'open', 'all', false, 'active', 11, 'eleitoral', 'account-group', '#f97316'),
-    ('entity_aliases', 'Cross-source entity aliases', false, false, true, 'open', 'all', false, 'active', 12, 'eleitoral', 'link-variant', '#6b7280'),
-    ('elections', 'Canonical elections registry', false, false, true, 'open', 'all', false, 'active', 13, 'eleitoral', 'ballot', '#ef4444'),
-    ('parties', 'Canonical party registry', false, false, true, 'open', 'all', false, 'active', 14, 'eleitoral', 'flag', '#ec4899'),
-    ('candidates', 'Normalized candidate records', false, false, true, 'open', 'all', false, 'active', 15, 'eleitoral', 'account-tie', '#2563eb'),
-    ('candidate_assets', 'Declared candidate assets', false, false, true, 'open', 'all', false, 'active', 16, 'eleitoral', 'cash-multiple', '#f59e0b')
+    ('people', 'Cadastro canônico de pessoas para cruzamento eleitoral', false, false, true, 'open', 'all', false, 'active', 11, 'eleicoes', 'account-group', '#f97316'),
+    ('entity_aliases', 'Aliases de entidades entre fontes', false, false, true, 'open', 'all', false, 'active', 12, 'eleicoes', 'link-variant', '#6b7280'),
+    ('elections', 'Cadastro canônico de eleições', false, false, true, 'open', 'all', false, 'active', 13, 'eleicoes', 'calendar-month', '#ef4444'),
+    ('parties', 'Cadastro canônico de partidos', false, false, true, 'open', 'all', false, 'active', 14, 'eleicoes', 'flag', '#ec4899'),
+    ('candidates', 'Registros normalizados de candidatos', false, false, true, 'open', 'all', false, 'active', 15, 'eleicoes', 'account-tie', '#2563eb'),
+    ('candidate_assets', 'Bens declarados por candidatos', false, false, true, 'open', 'all', false, 'active', 16, 'eleicoes', 'cash-multiple', '#f59e0b')
 ON CONFLICT (collection) DO UPDATE
 SET
     note = EXCLUDED.note,

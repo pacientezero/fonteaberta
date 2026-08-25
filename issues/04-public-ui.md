@@ -1,6 +1,7 @@
 # Issue 04 - Public UI for V1
 
 Phase: 03-public-ui
+Status: completed
 
 ## Goal
 

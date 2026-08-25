@@ -154,7 +154,7 @@ INSERT INTO directus_collections (
     icon,
     color
 ) VALUES
-    ('economia', 'Folder for official macroeconomic series and observations', false, false, false, 'open', 'all', false, 'active', 21, 'chart-line', '#0891b2')
+    ('economia', 'Pasta para séries macroeconômicas e observações', false, false, false, 'open', 'all', false, 'active', 21, 'chart-box-outline', '#0891b2')
 ON CONFLICT (collection) DO UPDATE
 SET
     note = EXCLUDED.note,
@@ -184,8 +184,8 @@ INSERT INTO directus_collections (
     icon,
     color
 ) VALUES
-    ('economic_series', 'Official macroeconomic time series', false, false, true, 'open', 'all', false, 'active', 22, 'economia', 'chart-line', '#0ea5e9'),
-    ('economic_observations', 'Observed points for macroeconomic series', false, false, true, 'open', 'all', false, 'active', 23, 'economia', 'table-clock', '#14b8a6')
+    ('economic_series', 'Séries macroeconômicas oficiais', false, false, true, 'open', 'all', false, 'active', 22, 'economia', 'chart-line', '#0ea5e9'),
+    ('economic_observations', 'Observações das séries macroeconômicas', false, false, true, 'open', 'all', false, 'active', 23, 'economia', 'table-clock', '#14b8a6')
 ON CONFLICT (collection) DO UPDATE
 SET
     note = EXCLUDED.note,

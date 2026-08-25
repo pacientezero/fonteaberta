@@ -1,6 +1,7 @@
 # Issue 01 - Bootstrap the platform
 
 Phase: 00-bootstrap
+Status: completed
 
 ## Goal
 

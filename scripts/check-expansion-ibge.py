@@ -53,7 +53,9 @@ def main() -> int:
                 (SELECT COUNT(*) FROM raw_records WHERE source_id = %s AND external_id = %s) AS raw_record_count,
                 (SELECT COUNT(*) FROM evidence WHERE source_id = %s AND external_id = %s) AS evidence_count,
                 (SELECT COUNT(*) FROM facts WHERE subject_type = 'economic_series' AND subject_id = %s AND predicate = %s) AS fact_count,
-                (SELECT COUNT(*) FROM claims WHERE subject_type = 'economic_series' AND subject_id = %s) AS claim_count
+                (SELECT COUNT(*) FROM facts WHERE subject_type = 'economic_series' AND subject_id = %s AND predicate = %s AND evidence_id = %s) AS fact_evidence_count,
+                (SELECT COUNT(*) FROM claims WHERE subject_type = 'economic_series' AND subject_id = %s) AS claim_count,
+                (SELECT COUNT(*) FROM claims_evidence WHERE claim_id = %s AND evidence_id = %s) AS claim_evidence_count
             """,
             (
                 first["source"]["id"],
@@ -66,6 +68,11 @@ def main() -> int:
                 first["series"]["id"],
                 "ipca_monthly_variation_december_2024",
                 first["series"]["id"],
+                "ipca_monthly_variation_december_2024",
+                summary["evidence"]["id"],
+                first["series"]["id"],
+                summary["claim"]["id"],
+                summary["evidence"]["id"],
             ),
         ).fetchone()
         counts = dict(counts)
@@ -79,10 +86,15 @@ def main() -> int:
     assert counts["raw_record_count"] == 1
     assert counts["evidence_count"] == 1
     assert counts["fact_count"] == 1
+    assert counts["fact_evidence_count"] == 1
     assert counts["claim_count"] == 1
+    assert counts["claim_evidence_count"] == 1
     assert summary["latest_value_formatted"] == "0,52%"
     assert summary["fact"]["value_text"] == "0,52%"
+    assert summary["fact"]["evidence_id"] == summary["evidence"]["id"]
     assert summary["claim"]["statement"] == "A variação mensal do IPCA em dezembro de 2024 foi de 0,52%."
+    assert first["claim_evidence"]["claim_id"] == summary["claim"]["id"]
+    assert first["claim_evidence"]["evidence_id"] == summary["evidence"]["id"]
     assert summary["raw_record"]["payload_hash"] == source_checksum
     assert summary["evidence"]["source_url"] == bundle["evidence"]["source_url"]
     assert str(summary["observations"][0]["observation_date"]) == "2024-01-01"
