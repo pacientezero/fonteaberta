@@ -1,6 +1,6 @@
 # Phase 01 - Data Governance
 
-Status: planned
+Status: completed
 
 ## Goal
 

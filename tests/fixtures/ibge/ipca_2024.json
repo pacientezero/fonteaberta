@@ -1,0 +1,117 @@
+{
+  "source": {
+    "name": "Instituto Brasileiro de Geografia e Estatística",
+    "slug": "ibge",
+    "institution": "Instituto Brasileiro de Geografia e Estatística",
+    "description": "API oficial de agregados do IBGE / SIDRA",
+    "base_url": "https://servicodados.ibge.gov.br/api/v3/agregados/1737",
+    "documentation_url": "https://servicodados.ibge.gov.br/api/docs/agregados?versao=3",
+    "source_type": "official_registry",
+    "scope": "federal",
+    "official": true,
+    "update_frequency": "monthly",
+    "license": "open data",
+    "enabled": true,
+    "metadata": {
+      "api_docs_url": "https://servicodados.ibge.gov.br/api/docs/agregados?versao=3",
+      "table_url": "https://sidra.ibge.gov.br/tabela/1737",
+      "aggregate_id": 1737,
+      "variable_id": 63
+    }
+  },
+  "dataset": {
+    "name": "IPCA - Variação mensal 2024",
+    "slug": "ipca-variacao-mensal-2024",
+    "external_id": "ibge-agregado-1737-variavel-63",
+    "format": "json",
+    "resource_url": "https://servicodados.ibge.gov.br/api/v3/agregados/1737/periodos/202401|202412/variaveis/63?localidades=N1[all]",
+    "scope": "federal",
+    "period_start": "2024-01-01",
+    "period_end": "2024-12-01",
+    "update_frequency": "monthly",
+    "enabled": true,
+    "metadata": {
+      "aggregate_id": 1737,
+      "variable_id": 63,
+      "aggregate_name": "IPCA - Série histórica com número-índice, variação mensal e variações acumuladas em 3 meses, em 6 meses, no ano e em 12 meses (a partir de dezembro/1979)",
+      "table_url": "https://sidra.ibge.gov.br/tabela/1737"
+    }
+  },
+  "series": {
+    "external_id": "ibge-ipca-1737-63-brasil",
+    "name": "IPCA - Variação mensal",
+    "description": "Variação mensal do IPCA Brasil, agregado 1737, variável 63",
+    "unit": "%",
+    "frequency": "monthly",
+    "series_code": 1737,
+    "start_date": "2024-01-01",
+    "end_date": "2024-12-01",
+    "active": true,
+    "metadata": {
+      "aggregate_id": 1737,
+      "variable_id": 63,
+      "locality": "Brasil"
+    },
+    "observations": [
+      {
+        "data": "2024-01-01",
+        "valor": "0.42",
+        "metadata": {
+          "period": "202401"
+        }
+      },
+      {
+        "data": "2024-12-01",
+        "valor": "0.52",
+        "metadata": {
+          "period": "202412"
+        }
+      }
+    ]
+  },
+  "ingestion_run": {
+    "started_at": "2024-12-31T00:00:00Z",
+    "finished_at": "2024-12-31T00:00:00Z",
+    "metadata": {
+      "source": "ibge-api-official",
+      "retrieval_intent": "official_economic_series_demo"
+    }
+  },
+  "raw_record": {
+    "external_id": "ibge-ipca-2024-12",
+    "source_updated_at": "2024-12-31T00:00:00Z",
+    "collected_at": "2024-12-31T00:00:00Z",
+    "metadata": {
+      "source": "servicodados.ibge.gov.br",
+      "endpoint": "agregados/1737/variaveis/63",
+      "retrieval_mode": "official_json"
+    }
+  },
+  "evidence": {
+    "external_id": "ibge-ipca-2024-evidence",
+    "source_url": "https://servicodados.ibge.gov.br/api/v3/agregados/1737/periodos/202401|202412/variaveis/63?localidades=N1[all]",
+    "section": "SIDRA IPCA",
+    "collected_at": "2024-12-31T00:00:00Z",
+    "metadata": {
+      "aggregate_id": 1737,
+      "variable_id": 63,
+      "source": "api-v3"
+    }
+  },
+  "checks": [
+    {
+      "period": "2024-12",
+      "expected_value": "0.52"
+    },
+    {
+      "period": "2024-01",
+      "expected_value": "0.42"
+    }
+  ],
+  "negative_checks": [
+    {
+      "period": "2024-11",
+      "expected_status": "no_evidence"
+    }
+  ]
+}

@@ -1,6 +1,13 @@
 <script lang="ts">
   import type { PageData } from './$types';
-  import { candidateAssetsRoute, candidateRoute, searchRoute, sourcesRoute } from '$lib/navigation';
+  import {
+    candidateAssetsRoute,
+    candidateRoute,
+    dataRoute,
+    methodologyRoute,
+    searchRoute,
+    sourcesRoute,
+  } from '$lib/navigation';
   import { formatPtBrDateTime, formatPtBrNumber } from '$lib/format';
 
   export let data: PageData;
@@ -46,6 +53,8 @@
         Ver bens
       </a>
       <a class="button-secondary" href={sourcesRoute()}>Ver fontes</a>
+      <a class="button-secondary" href={dataRoute()}>Dados</a>
+      <a class="button-secondary" href={methodologyRoute()}>Metodologia</a>
     </div>
   </section>
 
@@ -165,6 +174,40 @@
       </li>
     </ul>
   </article>
+</section>
+
+<section class="card section">
+  <div class="section-title">
+    <div>
+      <p class="panel-title">Cobertura completa</p>
+      <h2>V1, documentos, economia e dados administrativos</h2>
+    </div>
+    <span class="badge badge-accent">novo</span>
+  </div>
+
+  <div class="grid grid-2">
+    <div class="metric">
+      <p class="metric-label">Dados</p>
+      <p class="metric-value">Cobertura viva</p>
+      <p class="metric-note">
+        BCB, IBGE, Câmara, Senado, Transparência, Tesouro e Compras.gov agora aparecem
+        juntos.
+      </p>
+    </div>
+
+    <div class="metric">
+      <p class="metric-label">Metodologia</p>
+      <p class="metric-value">Contrato explícito</p>
+      <p class="metric-note">
+        A página metodológica explica atualização, cálculo, entidades, IA e correções.
+      </p>
+    </div>
+  </div>
+
+  <div class="toolbar" style="margin-top: 1rem;">
+    <a class="button" href={dataRoute()}>Abrir dados</a>
+    <a class="button-secondary" href={methodologyRoute()}>Ver metodologia</a>
+  </div>
 </section>
 
 <section class="grid grid-2">

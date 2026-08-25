@@ -176,15 +176,14 @@ INSERT INTO directus_collections (
     accountability,
     versioning,
     status,
-    sort
+    sort,
+    icon,
+    color
 ) VALUES
-    ('sources', 'Canonical source registry', false, false, true, 'open', 'all', false, 'active', 1),
-    ('datasets', 'Canonical dataset catalog', false, false, true, 'open', 'all', false, 'active', 2),
-    ('ingestion_runs', 'Ingestion run history', false, false, true, 'open', 'all', false, 'active', 3),
-    ('raw_records', 'Raw ingestion records', false, false, true, 'open', 'all', false, 'active', 4),
-    ('evidence', 'Evidence records tied to raw records', false, false, true, 'open', 'all', false, 'active', 5),
-    ('facts', 'Normalized facts', false, false, true, 'open', 'all', false, 'active', 6),
-    ('claims', 'Claims with provenance', false, false, true, 'open', 'all', false, 'active', 7)
+    ('catalogo', 'Pasta para catálogo de fontes e datasets', false, false, false, 'open', 'all', false, 'active', 0, 'database', '#475569'),
+    ('ingestao', 'Pasta para histórico de execuções de ingestão', false, false, false, 'open', 'all', false, 'active', 3, 'tray-arrow-down', '#d97706'),
+    ('proveniencia', 'Pasta para registros brutos, evidências, fatos e claims', false, false, false, 'open', 'all', false, 'active', 5, 'shield-check', '#059669'),
+    ('transparencia', 'Pasta reservada para o Portal da Transparência', false, false, false, 'open', 'all', false, 'active', 27, 'file-eye', '#0f766e')
 ON CONFLICT (collection) DO UPDATE
 SET
     note = EXCLUDED.note,
@@ -195,7 +194,46 @@ SET
     accountability = EXCLUDED.accountability,
     versioning = EXCLUDED.versioning,
     status = EXCLUDED.status,
-    sort = EXCLUDED.sort;
+    sort = EXCLUDED.sort,
+    icon = EXCLUDED.icon,
+    color = EXCLUDED.color;
+
+INSERT INTO directus_collections (
+    collection,
+    note,
+    hidden,
+    singleton,
+    archive_app_filter,
+    collapse,
+    accountability,
+    versioning,
+    status,
+    sort,
+    "group",
+    icon,
+    color
+) VALUES
+    ('sources', 'Cadastro canônico de fontes oficiais', false, false, true, 'open', 'all', false, 'active', 1, 'catalogo', 'database', '#2563eb'),
+    ('datasets', 'Catálogo canônico de datasets', false, false, true, 'open', 'all', false, 'active', 2, 'catalogo', 'table', '#14b8a6'),
+    ('ingestion_runs', 'Histórico de execuções de ingestão', false, false, true, 'open', 'all', false, 'active', 4, 'ingestao', 'sync', '#d97706'),
+    ('raw_records', 'Registros brutos de ingestão', false, false, true, 'open', 'all', false, 'active', 6, 'proveniencia', 'archive', '#64748b'),
+    ('evidence', 'Evidências ligadas aos registros brutos', false, false, true, 'open', 'all', false, 'active', 7, 'proveniencia', 'shield-search', '#10b981'),
+    ('facts', 'Fatos normalizados', false, false, true, 'open', 'all', false, 'active', 8, 'proveniencia', 'calculator', '#059669'),
+    ('claims', 'Afirmações com proveniência', false, false, true, 'open', 'all', false, 'active', 9, 'proveniencia', 'comment-text-outline', '#8b5cf6')
+ON CONFLICT (collection) DO UPDATE
+SET
+    note = EXCLUDED.note,
+    hidden = EXCLUDED.hidden,
+    singleton = EXCLUDED.singleton,
+    archive_app_filter = EXCLUDED.archive_app_filter,
+    collapse = EXCLUDED.collapse,
+    accountability = EXCLUDED.accountability,
+    versioning = EXCLUDED.versioning,
+    status = EXCLUDED.status,
+    sort = EXCLUDED.sort,
+    "group" = EXCLUDED."group",
+    icon = EXCLUDED.icon,
+    color = EXCLUDED.color;
 
 WITH managed_tables(collection) AS (
     VALUES
@@ -234,6 +272,21 @@ WHERE columns.table_schema = 'public'
         AND field = columns.column_name
   )
 ORDER BY columns.table_name, columns.ordinal_position;
+
+UPDATE directus_collections
+SET "group" = 'catalogo'
+WHERE "group" = 'cadastros';
+
+UPDATE directus_collections
+SET "group" = 'ingestao'
+WHERE "group" = 'operacao';
+
+UPDATE directus_collections
+SET "group" = 'proveniencia'
+WHERE "group" = 'auditoria';
+
+DELETE FROM directus_collections
+WHERE collection IN ('cadastros', 'operacao', 'auditoria');
 
 DO $$
 DECLARE

@@ -12,7 +12,13 @@ if str(API_ROOT) not in sys.path:
     sys.path.insert(0, str(API_ROOT))
 
 from app.db import db_connection  # noqa: E402
-from app.tse_v1 import fetch_candidate_summary, ingest_official_bundle, load_fixture_bundle, payload_hash  # noqa: E402
+from app.tse_v1 import (  # noqa: E402
+    fetch_candidate_summary,
+    ingest_official_bundle,
+    load_fixture_bundle,
+    payload_hash,
+    query_candidate_catalog_response,
+)
 
 
 def parse_args() -> argparse.Namespace:
@@ -34,6 +40,7 @@ def main() -> int:
     with db_connection() as connection:
         ingest_official_bundle(connection, bundle, source_checksum_value=source_checksum)
         summary = fetch_candidate_summary(connection, bundle["candidate"]["SQ_CANDIDATO"])
+        catalog = query_candidate_catalog_response(connection, limit=20)
 
     expected_total = "795089.00"
     expected_total_brl = "R$ 795.089,00"
@@ -49,6 +56,9 @@ def main() -> int:
     assert summary["claim"]["statement"] == f"Patrimônio declarado: {expected_total_brl}"
     assert len(summary["assets"]) == 4
     assert len(summary["provenance"]["claim_evidence"]) == 5
+    assert catalog["status"] == "ok"
+    assert catalog["count"] >= 1
+    assert catalog["candidates"][0]["candidate"]["external_id"] == "280002540694"
 
     print(
         json.dumps(
@@ -58,6 +68,7 @@ def main() -> int:
                 "claim": summary["claim"]["statement"],
                 "source": summary["source"]["name"],
                 "datasets": [dataset["slug"] for dataset in summary["datasets"]],
+                "catalog_count": catalog["count"],
             },
             ensure_ascii=False,
             indent=2,

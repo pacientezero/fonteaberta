@@ -1,0 +1,94 @@
+{
+  "source": {
+    "name": "Tribunal Superior Eleitoral",
+    "slug": "tse",
+    "institution": "Tribunal Superior Eleitoral",
+    "description": "Página oficial de documentos e orientações do TSE para o CANDex 2026",
+    "base_url": "https://www.tse.jus.br/",
+    "documentation_url": "https://www.tse.jus.br/eleicoes/eleicoes-2026-content/sistema-de-candidaturas-modulo-externo-candex-2026",
+    "source_type": "official_registry",
+    "scope": "federal",
+    "official": true,
+    "update_frequency": "daily",
+    "license": "open data",
+    "enabled": true,
+    "metadata": {
+      "portal_url": "https://www.tse.jus.br/",
+      "document_catalog_url": "https://www.tse.jus.br/eleicoes/eleicoes-2026-content/sistema-de-candidaturas-modulo-externo-candex-2026"
+    }
+  },
+  "document": {
+    "external_id": "candex-2026",
+    "document_type": "official_page",
+    "title": "Sistema de Candidaturas – Módulo Externo (CANDex) 2026",
+    "description": "Página oficial do TSE com visão geral do CANDex 2026 e links para o manual do sistema.",
+    "source_url": "https://www.tse.jus.br/eleicoes/eleicoes-2026-content/sistema-de-candidaturas-modulo-externo-candex-2026",
+    "published_at": null,
+    "mime_type": "text/html",
+    "metadata": {
+      "official": true,
+      "page_count": 1,
+      "retrieval_intent": "official_document_demo"
+    }
+  },
+  "version": {
+    "version_number": 1,
+    "file_path": null,
+    "file_url": "https://www.tse.jus.br/eleicoes/eleicoes-2026-content/sistema-de-candidaturas-modulo-externo-candex-2026",
+    "source_updated_at": "2026-08-21T00:00:00Z",
+    "collected_at": "2026-08-21T00:00:00Z",
+    "metadata": {
+      "source": "turn3view0",
+      "extraction": "web-open"
+    },
+    "text_content": "O Sistema CANDex é utilizado para a elaboração de todos os tipos de pedido previstos nas normas eleitorais para as eleições gerais, municipais e suplementares. São eles: o pedido coletivo, o pedido individual, o pedido de substituição, o pedido de vaga remanescente e o Demonstrativo de Regularidade de Atos Partidários (DRAP).\n\nAs atas das convenções partidárias e as respectivas listas de presença são igualmente digitadas no CANDex, recurso que é de grande importância para conferir agilidade no preenchimento dos DRAPs e viabilizar a imediata publicação na página do Tribunal Superior Eleitoral (TSE).\n\nPrincipais Recursos do CANDex 2026\n\nRecuperação de dados: Durante a criação do pedido de registro - e logo após a vinculação da respectiva ata de convenção -, as informações dos candidatos são recuperadas automaticamente do Cadastro Eleitoral, e o sistema permite a conferência, atualização ou correção desses dados ao longo do preenchimento dos campos.\n\nIntegrações com sistemas: O CANDex é integrado com os sistemas SGIP, Cadastro Eleitoral, Receita Federal, Sistema de Filiação Partidária (Filia) e Processo Judicial eletrônico (PJe).\n\nTransmissão via internet: O envio das atas de convenção e dos pedidos de registro de candidatura é feito de forma 100% digital, diretamente pelo CANDex. Não há necessidade de deslocamento ou apresentação presencial desses documentos e mídias perante os tribunais eleitorais.\n\nAções afirmativas: Declaração sobre identidade de gênero, orientação sexual, etnia indígena e pertencimento a comunidades quilombolas.\n\nTratamento de dados (LGPD): Campos obrigatórios para cadastramento do encarregado de dados e do canal de comunicação para fins de tratamento de dados, nos termos do art. 18 da Lei n. 13.709, de 14 de agosto de 2018 (Lei Geral de Proteção de Dados Pessoais).\n\nAcesso ao CANDex (Versão Oficial)\n\nÓrgãos partidários regulares\n\nA partir deste ciclo, o acesso à aplicação será realizado por meio do link https://candexweb.tse.jus.br. O acesso inicial ao sistema é restrito aos representantes legítimos dos partidos políticos e das federações vigentes - presidentes e delegados anotados no Sistema de Gerenciamento de Informações Partidárias (SGIP), observada a respectiva circunscrição.\n\nApós a criação da ata ou do pedido de registro, esses responsáveis poderão autorizar o acesso de terceiros para o preenchimento e a edição dos documentos.\n\nCasos excepcionais\n\nÓrgãos partidários irregulares\n\nEm casos de divergência interna quanto à representação partidária, as pessoas que se consideram legitimadas a realizar convenção partidária e a registrar candidaturas devem requerer o acesso às instâncias superiores do partido ou da federação. Caso haja recusa, podem requerer ao tribunal eleitoral competente da circunscrição, por meio de preenchimento de formulário.\n\nDivergência interna\n\nEm casos de divergência interna quanto à representação partidária, as pessoas que se consideram legitimadas a realizar convenção partidária e a registrar candidaturas devem requerer o acesso às instâncias superiores do partido ou da federação. Caso haja recusa, podem requerer ao tribunal eleitoral competente da circunscrição, por meio de preenchimento de formulário.\n\nRRCI\n\nOs candidatos escolhidos em convenções de partidos, federações ou coligações que não constem do pedido de registro apresentado à Justiça Eleitoral terão acesso automático ao CANDex, a partir da entrega do pedido pelo seu partido político. Esse acesso simplifica o processo de registro, tornando-o mais prático e eficiente. No entanto, caso o candidato não consiga acessar automaticamente o sistema, será necessário seguir um procedimento alternativo.\n\nO candidato deverá requerer o acesso ao sistema por meio de formulário específico e apresentar ao juízo eleitoral da sua circunscrição, para análise e autorização. Esse procedimento visa garantir que todos os candidatos tenham a oportunidade de registrar suas candidaturas, assegurando a transparência e a regularidade nas eleições.\n\nFormulários\n\nFomulário para solicitação de acesso individual ao sistema CANDex (RRCI) (formato PDF)\nFomulário para solicitação de acesso ao sistema CANDex - Partido Político (formato PDF)\nFomulário para solicitação de acesso individual ao sistema CANDex (RRCI) - Via Procurador (formato PDF)\n\nManuais e Links de Download\n\nAcesse aqui o Manual do sistema Candex 2026 - versão 2 (formato .pdf)\nPasso a passo para registrar candidaturas no CANDex (vídeo)\nPasso a passo para utilizar assinatura eletrônica, via e-Título (geração do Código de Autenticação) (formato PDF).",
+    "chunks": [
+      {
+        "chunk_index": 0,
+        "page": 1,
+        "section": "Sistema de Candidaturas – Módulo Externo (CANDex) 2026",
+        "content": "O Sistema CANDex é utilizado para a elaboração de todos os tipos de pedido previstos nas normas eleitorais para as eleições gerais, municipais e suplementares. São eles: o pedido coletivo, o pedido individual, o pedido de substituição, o pedido de vaga remanescente e o Demonstrativo de Regularidade de Atos Partidários (DRAP).\n\nAs atas das convenções partidárias e as respectivas listas de presença são igualmente digitadas no CANDex, recurso que é de grande importância para conferir agilidade no preenchimento dos DRAPs e viabilizar a imediata publicação na página do Tribunal Superior Eleitoral (TSE).",
+        "token_count": 77,
+        "metadata": {
+          "section_kind": "overview"
+        }
+      },
+      {
+        "chunk_index": 1,
+        "page": 1,
+        "section": "Principais Recursos do CANDex 2026",
+        "content": "Recuperação de dados: Durante a criação do pedido de registro - e logo após a vinculação da respectiva ata de convenção -, as informações dos candidatos são recuperadas automaticamente do Cadastro Eleitoral, e o sistema permite a conferência, atualização ou correção desses dados ao longo do preenchimento dos campos.\n\nIntegrações com sistemas: O CANDex é integrado com os sistemas SGIP, Cadastro Eleitoral, Receita Federal, Sistema de Filiação Partidária (Filia) e Processo Judicial eletrônico (PJe).\n\nTransmissão via internet: O envio das atas de convenção e dos pedidos de registro de candidatura é feito de forma 100% digital, diretamente pelo CANDex. Não há necessidade de deslocamento ou apresentação presencial desses documentos e mídias perante os tribunais eleitorais.\n\nAções afirmativas: Declaração sobre identidade de gênero, orientação sexual, etnia indígena e pertencimento a comunidades quilombolas.\n\nTratamento de dados (LGPD): Campos obrigatórios para cadastramento do encarregado de dados e do canal de comunicação para fins de tratamento de dados, nos termos do art. 18 da Lei n. 13.709, de 14 de agosto de 2018 (Lei Geral de Proteção de Dados Pessoais).",
+        "token_count": 134,
+        "metadata": {
+          "section_kind": "features"
+        }
+      },
+      {
+        "chunk_index": 2,
+        "page": 1,
+        "section": "Acesso ao CANDex (Versão Oficial)",
+        "content": "Acesso ao CANDex (Versão Oficial)\n\nÓrgãos partidários regulares\n\nA partir deste ciclo, o acesso à aplicação será realizado por meio do link https://candexweb.tse.jus.br. O acesso inicial ao sistema é restrito aos representantes legítimos dos partidos políticos e das federações vigentes - presidentes e delegados anotados no Sistema de Gerenciamento de Informações Partidárias (SGIP), observada a respectiva circunscrição.\n\nApós a criação da ata ou do pedido de registro, esses responsáveis poderão autorizar o acesso de terceiros para o preenchimento e a edição dos documentos.\n\nCasos excepcionais\n\nÓrgãos partidários irregulares\n\nEm casos de divergência interna quanto à representação partidária, as pessoas que se consideram legitimadas a realizar convenção partidária e a registrar candidaturas devem requerer o acesso às instâncias superiores do partido ou da federação. Caso haja recusa, podem requerer ao tribunal eleitoral competente da circunscrição, por meio de preenchimento de formulário.\n\nDivergência interna\n\nEm casos de divergência interna quanto à representação partidária, as pessoas que se consideram legitimadas a realizar convenção partidária e a registrar candidaturas devem requerer o acesso às instâncias superiores do partido ou da federação. Caso haja recusa, podem requerer ao tribunal eleitoral competente da circunscrição, por meio de preenchimento de formulário.\n\nRRCI\n\nOs candidatos escolhidos em convenções de partidos, federações ou coligações que não constem do pedido de registro apresentado à Justiça Eleitoral terão acesso automático ao CANDex, a partir da entrega do pedido pelo seu partido político. Esse acesso simplifica o processo de registro, tornando-o mais prático e eficiente. No entanto, caso o candidato não consiga acessar automaticamente o sistema, será necessário seguir um procedimento alternativo.\n\nO candidato deverá requerer o acesso ao sistema por meio de formulário específico e apresentar ao juízo eleitoral da sua circunscrição, para análise e autorização. Esse procedimento visa garantir que todos os candidatos tenham a oportunidade de registrar suas candidaturas, assegurando a transparência e a regularidade nas eleições.\n\nFormulários\n\nFomulário para solicitação de acesso individual ao sistema CANDex (RRCI) (formato PDF)\nFomulário para solicitação de acesso ao sistema CANDex - Partido Político (formato PDF)\nFomulário para solicitação de acesso individual ao sistema CANDex (RRCI) - Via Procurador (formato PDF)\n\nManuais e Links de Download\n\nAcesse aqui o Manual do sistema Candex 2026 - versão 2 (formato .pdf)\nPasso a passo para registrar candidaturas no CANDex (vídeo)\nPasso a passo para utilizar assinatura eletrônica, via e-Título (geração do Código de Autenticação) (formato PDF).",
+        "token_count": 209,
+        "metadata": {
+          "section_kind": "access"
+        }
+      }
+    ]
+  },
+  "checks": [
+    {
+      "question": "Para que o CANDex é utilizado?",
+      "expected_fragment": "O Sistema CANDex é utilizado para a elaboração de todos os tipos de pedido"
+    },
+    {
+      "question": "Quem pode acessar o CANDex?",
+      "expected_fragment": "o acesso inicial ao sistema é restrito aos representantes legítimos"
+    }
+  ],
+  "negative_checks": [
+    {
+      "question": "Qual é a capital da França?",
+      "expected_status": "no_evidence"
+    }
+  ]
+}

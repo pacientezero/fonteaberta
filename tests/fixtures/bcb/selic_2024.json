@@ -1,0 +1,115 @@
+{
+  "source": {
+    "name": "Banco Central do Brasil",
+    "slug": "bcb",
+    "institution": "Banco Central do Brasil",
+    "description": "Portal oficial de séries temporais econômicas do BCB",
+    "base_url": "https://dadosabertos.bcb.gov.br/",
+    "documentation_url": "https://dadosabertos.bcb.gov.br/dataset/11-taxa-de-juros---selic/resource/b73edc07-bbac-430c-a2cb-b1639e605fa8",
+    "source_type": "official_registry",
+    "scope": "federal",
+    "official": true,
+    "update_frequency": "daily",
+    "license": "open data",
+    "enabled": true,
+    "metadata": {
+      "portal_url": "https://dadosabertos.bcb.gov.br/",
+      "api_base_url": "https://api.bcb.gov.br/dados/serie/bcdata.sgs.11/dados",
+      "series_code": 11,
+      "series_name": "Taxa Selic"
+    }
+  },
+  "dataset": {
+    "name": "Taxa Selic - SGS 11",
+    "slug": "selic-sgs-11-2024",
+    "external_id": "sgs-11-selic",
+    "format": "json",
+    "resource_url": "https://api.bcb.gov.br/dados/serie/bcdata.sgs.11/dados?formato=json&dataInicial=01/12/2024&dataFinal=31/12/2024",
+    "scope": "federal",
+    "period_start": "2024-12-02",
+    "period_end": "2024-12-31",
+    "update_frequency": "daily",
+    "enabled": true,
+    "metadata": {
+      "series_code": 11,
+      "series_name": "Taxa Selic",
+      "portal_dataset_url": "https://dadosabertos.bcb.gov.br/dataset/11-taxa-de-juros---selic/resource/b73edc07-bbac-430c-a2cb-b1639e605fa8"
+    }
+  },
+  "series": {
+    "external_id": "bcb-sgs-11",
+    "name": "Taxa Selic",
+    "description": "Série diária oficial do BCB para a taxa Selic",
+    "unit": "%",
+    "frequency": "daily",
+    "series_code": 11,
+    "start_date": "2024-12-02",
+    "end_date": "2024-12-31",
+    "active": true,
+    "metadata": {
+      "portal_dataset_url": "https://dadosabertos.bcb.gov.br/dataset/11-taxa-de-juros---selic/resource/b73edc07-bbac-430c-a2cb-b1639e605fa8",
+      "value_scale": "decimal_rate"
+    },
+    "observations": [
+      { "data": "02/12/2024", "valor": "0.041957" },
+      { "data": "03/12/2024", "valor": "0.041957" },
+      { "data": "04/12/2024", "valor": "0.041957" },
+      { "data": "05/12/2024", "valor": "0.041957" },
+      { "data": "06/12/2024", "valor": "0.041957" },
+      { "data": "09/12/2024", "valor": "0.041957" },
+      { "data": "10/12/2024", "valor": "0.041957" },
+      { "data": "11/12/2024", "valor": "0.041957" },
+      { "data": "12/12/2024", "valor": "0.045513" },
+      { "data": "13/12/2024", "valor": "0.045513" },
+      { "data": "16/12/2024", "valor": "0.045513" },
+      { "data": "17/12/2024", "valor": "0.045513" },
+      { "data": "18/12/2024", "valor": "0.045513" },
+      { "data": "19/12/2024", "valor": "0.045513" },
+      { "data": "20/12/2024", "valor": "0.045513" },
+      { "data": "23/12/2024", "valor": "0.045513" },
+      { "data": "24/12/2024", "valor": "0.045513" },
+      { "data": "26/12/2024", "valor": "0.045513" },
+      { "data": "27/12/2024", "valor": "0.045513" },
+      { "data": "30/12/2024", "valor": "0.045513" },
+      { "data": "31/12/2024", "valor": "0.045513" }
+    ]
+  },
+  "ingestion_run": {
+    "started_at": "2024-12-31T00:00:00Z",
+    "finished_at": "2024-12-31T00:00:00Z",
+    "metadata": {
+      "source": "bcb-api-official",
+      "retrieval_intent": "official_economic_series_demo"
+    }
+  },
+  "raw_record": {
+    "external_id": "bcb-sgs-11-2024-12",
+    "source_updated_at": "2024-12-31T00:00:00Z",
+    "collected_at": "2024-12-31T00:00:00Z",
+    "metadata": {
+      "source": "api.bcb.gov.br",
+      "endpoint": "series/11",
+      "retrieval_mode": "official_json"
+    }
+  },
+  "evidence": {
+    "external_id": "bcb-sgs-11-2024-12-evidence",
+    "source_url": "https://api.bcb.gov.br/dados/serie/bcdata.sgs.11/dados?formato=json&dataInicial=01/12/2024&dataFinal=31/12/2024",
+    "section": "SGS Selic",
+    "collected_at": "2024-12-31T00:00:00Z",
+    "metadata": {
+      "resource_id": 11,
+      "source": "resource-page"
+    }
+  },
+  "checks": [
+    {
+      "observation_date": "2024-12-02",
+      "expected_value": "0.041957"
+    },
+    {
+      "observation_date": "2024-12-31",
+      "expected_value": "0.045513"
+    }
+  ]
+}

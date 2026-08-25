@@ -7,8 +7,9 @@ Entregar a V1 da plataforma com base em dados publicos oficiais, provenance audi
 ## Estado atual
 
 - Repo Git criado e publicado em GitHub.
-- Branch de trabalho atual: `feature/01-bootstrap`.
-- Fase 00 bootstrap concluida e validada localmente na branch de trabalho.
+- Branch de trabalho atual: `feature/06-expansion`.
+- Fases 00 a 05 concluidas e validadas localmente na branch de trabalho.
+- Fase 05 concluida localmente com os slices do BCB Selic, IBGE IPCA, Câmara dos Deputados, Senado Federal, Portal da Transparência, Compras.gov e Tesouro validados localmente.
 - `AGENTS.md` define o contrato operacional.
 - `issues/` contem o backlog em 7 issues.
 - `phases/` contem a ordem de execucao por fase.
@@ -130,6 +131,16 @@ Criterio de aceite:
 
 - a mesma cadeia de provenance funciona nas novas fontes
 
+Status atual:
+
+- BCB Selic validado localmente.
+- IBGE IPCA validado localmente.
+- Câmara dos Deputados validado localmente com a primeira fatia de deputados e mandates.
+- Senado Federal validado localmente com snapshot datado da lista de senadores em exercício.
+- Portal da Transparência validado localmente com o slice de despesas.
+- Tesouro validado localmente com o slice de RREO São Paulo 2024 P6 Anexo 01.
+- Compras.gov teve a taxonomia Directus organizada em `comprasgov` e a API pública exposta para o slice de fornecedores ativos.
+
 ### Fase 06 - Hardening
 
 Base: [Issue 07](../issues/07-hardening.md)
@@ -150,6 +161,16 @@ Criterio de aceite:
 
 - o caminho factual fica auditavel e testavel end to end
 
+Status atual:
+
+- headers basicos de seguranca, politica de cache, request IDs e server timing estao ativos em web e API
+- o gate de release verifica a trilha factual completa e o slice de hardening no stack local
+
+## Estado geral
+
+- Fases 00 a 06 concluidas e verificadas localmente.
+- A licenca final do projeto e `AGPL-3.0`.
+
 ## Caminho critico
 
 1. Data governance antes do connector.
@@ -160,4 +181,4 @@ Criterio de aceite:
 
 ## Proxima acao recomendada
 
-Abrir a branch e executar a [Issue 01](../issues/01-bootstrap.md) como primeiro ciclo de implementacao.
+Abrir a branch da [Issue 07](../issues/07-hardening.md) assim que a Issue 06 estiver consolidada na branch principal.

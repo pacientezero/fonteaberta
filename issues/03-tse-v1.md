@@ -1,6 +1,7 @@
 # Issue 03 - TSE V1 vertical
 
 Phase: 02-tse-v1
+Status: completed
 
 ## Goal
 

@@ -28,7 +28,7 @@ BEGIN
         metadata
     ) VALUES (
         'Tribunal Superior Eleitoral',
-        'tse',
+        'smoke-tse-governance',
         'Tribunal Superior Eleitoral',
         'https://dadosabertos.tse.jus.br/',
         'https://dadosabertos.tse.jus.br/',
@@ -58,8 +58,8 @@ BEGIN
     ) VALUES (
         smoke_source_id,
         'Candidatos 2026',
-        'candidatos-2026',
-        'candidatos-2026',
+        'smoke-candidatos-2026',
+        'smoke-candidatos-2026',
         'csv',
         'https://dadosabertos.tse.jus.br/dataset/candidatos-2026',
         'federal',
@@ -231,18 +231,90 @@ BEGIN
         SELECT 1
         FROM (
             VALUES
+                ('catalogo'),
                 ('sources'),
                 ('datasets'),
+                ('ingestao'),
                 ('ingestion_runs'),
+                ('proveniencia'),
                 ('raw_records'),
                 ('evidence'),
                 ('facts'),
-                ('claims')
+                ('claims'),
+                ('eleicoes'),
+                ('people'),
+                ('entity_aliases'),
+                ('elections'),
+                ('parties'),
+                ('candidates'),
+                ('candidate_assets'),
+                ('documentos'),
+                ('documents'),
+                ('document_versions'),
+                ('document_chunks'),
+                ('economia'),
+                ('economic_series'),
+                ('economic_observations'),
+                ('legislativo'),
+                ('mandates'),
+                ('transparencia'),
+                ('government_expenses'),
+                ('tesouro'),
+                ('rreo_rows'),
+                ('comprasgov'),
+                ('comprasgov_supplier_records')
         ) AS managed(collection)
         LEFT JOIN directus_collections dc ON dc.collection = managed.collection
         WHERE dc.collection IS NULL
     ) THEN
         RAISE EXCEPTION 'Managed Directus collections are missing';
+    END IF;
+
+    IF EXISTS (
+        SELECT 1
+        FROM (
+            VALUES
+                ('catalogo', '', 'database', '#475569', 0),
+                ('sources', 'catalogo', 'database', '#2563eb', 1),
+                ('datasets', 'catalogo', 'table', '#14b8a6', 2),
+                ('ingestao', '', 'tray-arrow-down', '#d97706', 3),
+                ('ingestion_runs', 'ingestao', 'sync', '#d97706', 4),
+                ('proveniencia', '', 'shield-check', '#059669', 5),
+                ('raw_records', 'proveniencia', 'archive', '#64748b', 6),
+                ('evidence', 'proveniencia', 'shield-search', '#10b981', 7),
+                ('facts', 'proveniencia', 'calculator', '#059669', 8),
+                ('claims', 'proveniencia', 'comment-text-outline', '#8b5cf6', 9),
+                ('eleicoes', '', 'ballot', '#2563eb', 10),
+                ('people', 'eleicoes', 'account-group', '#f97316', 11),
+                ('entity_aliases', 'eleicoes', 'link-variant', '#6b7280', 12),
+                ('elections', 'eleicoes', 'calendar-month', '#ef4444', 13),
+                ('parties', 'eleicoes', 'flag', '#ec4899', 14),
+                ('candidates', 'eleicoes', 'account-tie', '#2563eb', 15),
+                ('candidate_assets', 'eleicoes', 'cash-multiple', '#f59e0b', 16),
+                ('documentos', '', 'book-open-page-variant', '#0ea5e9', 17),
+                ('documents', 'documentos', 'file-document-multiple', '#06b6d4', 18),
+                ('document_versions', 'documentos', 'file-clock', '#0ea5e9', 19),
+                ('document_chunks', 'documentos', 'vector-polyline', '#a855f7', 20),
+                ('economia', '', 'chart-box-outline', '#0891b2', 21),
+                ('economic_series', 'economia', 'chart-line', '#0ea5e9', 22),
+                ('economic_observations', 'economia', 'table-clock', '#14b8a6', 23),
+                ('legislativo', '', 'gavel', '#7c3aed', 24),
+                ('mandates', 'legislativo', 'calendar-range', '#8b5cf6', 25),
+                ('transparencia', '', 'file-eye', '#0f766e', 27),
+                ('government_expenses', 'transparencia', 'cash-multiple', '#14b8a6', 28),
+                ('tesouro', '', 'bank', '#1e3a8a', 29),
+                ('rreo_rows', 'tesouro', 'table', '#3b82f6', 30),
+                ('comprasgov', '', 'cart-outline', '#ca8a04', 31),
+                ('comprasgov_supplier_records', 'comprasgov', 'storefront-outline', '#f59e0b', 32)
+        ) AS expected(collection, expected_group, expected_icon, expected_color, expected_sort)
+        LEFT JOIN directus_collections dc ON dc.collection = expected.collection
+        WHERE dc.collection IS NULL
+           OR COALESCE(dc."group", '') <> expected.expected_group
+           OR COALESCE(dc.icon, '') <> expected.expected_icon
+           OR COALESCE(dc.color, '') <> expected.expected_color
+           OR COALESCE(dc.sort, -1) <> expected.expected_sort
+    ) THEN
+        RAISE EXCEPTION 'Directus collection organization is incomplete';
     END IF;
 
     SELECT count(*) INTO expected_directus_field_count
@@ -255,7 +327,22 @@ BEGIN
           'raw_records',
           'evidence',
           'facts',
-          'claims'
+          'claims',
+          'people',
+          'entity_aliases',
+          'elections',
+          'parties',
+          'candidates',
+          'candidate_assets',
+          'documents',
+          'document_versions',
+          'document_chunks',
+          'economic_series',
+          'economic_observations',
+          'mandates',
+          'government_expenses',
+          'rreo_rows',
+          'comprasgov_supplier_records'
       );
 
     SELECT count(*) INTO actual_directus_field_count
@@ -267,7 +354,22 @@ BEGIN
         'raw_records',
         'evidence',
         'facts',
-        'claims'
+        'claims',
+        'people',
+        'entity_aliases',
+        'elections',
+        'parties',
+        'candidates',
+        'candidate_assets',
+        'documents',
+        'document_versions',
+        'document_chunks',
+        'economic_series',
+        'economic_observations',
+        'mandates',
+        'government_expenses',
+        'rreo_rows',
+        'comprasgov_supplier_records'
     );
 
     IF expected_directus_field_count <> actual_directus_field_count THEN

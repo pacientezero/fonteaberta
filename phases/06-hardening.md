@@ -1,6 +1,6 @@
 # Phase 06 - Hardening
 
-Status: planned
+Status: completed
 
 ## Goal
 
@@ -21,3 +21,8 @@ Lock down correctness, observability, and release readiness.
 ## Exit criteria
 
 - The system is auditable and the factual response path is testable end to end.
+
+## Status notes
+
+- Web and API now emit baseline security headers, cache policy, request IDs, and server timing.
+- The release gate checks the factual path and the new hardening headers against the local stack.

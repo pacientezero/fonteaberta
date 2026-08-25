@@ -1,11 +1,19 @@
 <script lang="ts">
   import type { PageData } from './$types';
-  import { candidateRoute, candidateAssetsRoute, homeRoute, searchRoute } from '$lib/navigation';
+  import {
+    candidateRoute,
+    candidateAssetsRoute,
+    dataRoute,
+    homeRoute,
+    methodologyRoute,
+    searchRoute,
+  } from '$lib/navigation';
   import { formatPtBrDateTime, formatPtBrNumber } from '$lib/format';
 
   export let data: PageData;
 
   const summary = data.summary;
+  const registryCards = data.coverage.cards.filter((card) => card.key !== 'tse-v1');
   const sourceMetadata = summary.source.metadata as Record<string, string | undefined>;
 
   function datasetMetadata(
@@ -30,6 +38,7 @@
       <h1>Fonte, dataset e evidencia</h1>
       <p class="lead">
         Esta pagina mostra a base oficial que sustenta a resposta publica atual da V1.
+        A cobertura viva das demais frentes aparece logo abaixo e em <a href={dataRoute()}>Dados</a>.
       </p>
     </div>
 
@@ -39,6 +48,8 @@
         Abrir bens
       </a>
       <a class="button-secondary" href={searchRoute(summary.person.canonical_name)}>Buscar nome</a>
+      <a class="button-secondary" href={dataRoute()}>Dados</a>
+      <a class="button-secondary" href={methodologyRoute()}>Metodologia</a>
       <a class="button-secondary" href={homeRoute()}>Inicio</a>
     </div>
   </div>
@@ -203,6 +214,63 @@
   </article>
 </section>
 
+<section class="card section">
+  <div class="section-title">
+    <div>
+      <p class="panel-title">Cobertura viva</p>
+      <h2>Fontes, APIs e documentos que já aparecem na UI</h2>
+    </div>
+    <span class="badge badge-accent">{registryCards.length} cards</span>
+  </div>
+
+  <div class="grid registry-grid">
+    {#each registryCards as card}
+      <article class="registry-card" style={`--accent:${card.accent};`}>
+        <div class="registry-head">
+          <div>
+            <p class="eyebrow">{card.eyebrow}</p>
+            <h3>{card.title}</h3>
+          </div>
+          <span class={card.status === 'ok' ? 'badge badge-accent' : 'badge'}>{card.statusLabel}</span>
+        </div>
+
+        <p class="registry-headline">{card.headline}</p>
+        <p class="note">{card.description}</p>
+
+        <dl class="registry-metrics">
+          {#each card.metrics as metric}
+            <div>
+              <dt>{metric.label}</dt>
+              <dd>{metric.value}</dd>
+            </div>
+          {/each}
+        </dl>
+
+        <div class="toolbar registry-toolbar">
+          <a
+            class="button"
+            href={card.primaryHref}
+            target={card.primaryExternal ? '_blank' : undefined}
+            rel={card.primaryExternal ? 'noreferrer' : undefined}
+          >
+            {card.primaryLabel}
+          </a>
+          {#if card.secondaryHref && card.secondaryLabel}
+            <a
+              class="button-secondary"
+              href={card.secondaryHref}
+              target={card.secondaryExternal ? '_blank' : undefined}
+              rel={card.secondaryExternal ? 'noreferrer' : undefined}
+            >
+              {card.secondaryLabel}
+            </a>
+          {/if}
+        </div>
+      </article>
+    {/each}
+  </div>
+</section>
+
 <style>
   .dataset-card {
     padding: 1rem;
@@ -232,5 +300,78 @@
   .dataset-details span:last-child {
     text-align: right;
     color: var(--text);
+  }
+
+  .registry-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .registry-card {
+    padding: 1rem;
+    display: grid;
+    gap: 0.85rem;
+    border-top: 4px solid var(--accent);
+    background: var(--surface-strong);
+    box-shadow: inset 0 4px 0 var(--accent), var(--shadow);
+  }
+
+  .registry-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .registry-card h3 {
+    margin: 0;
+    font-size: 1.18rem;
+    line-height: 1.1;
+    letter-spacing: -0.04em;
+  }
+
+  .registry-headline {
+    margin: 0;
+    color: var(--text);
+    font-size: 1.35rem;
+    line-height: 1.05;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+  }
+
+  .registry-metrics {
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.85rem;
+  }
+
+  .registry-metrics dt {
+    color: var(--muted);
+    font-size: 0.76rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+
+  .registry-metrics dd {
+    margin: 0.2rem 0 0;
+    color: var(--text);
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  .registry-toolbar {
+    margin-top: 0.15rem;
+  }
+
+  .registry-toolbar .button,
+  .registry-toolbar .button-secondary {
+    flex: 1 1 10rem;
+    justify-content: center;
+  }
+
+  @media (max-width: 1100px) {
+    .registry-grid {
+      grid-template-columns: 1fr;
+    }
   }
 </style>

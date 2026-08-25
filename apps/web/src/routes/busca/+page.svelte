@@ -1,6 +1,14 @@
 <script lang="ts">
   import type { PageData } from './$types';
-  import { candidateAssetsRoute, candidateRoute, searchRoute, sourcesRoute } from '$lib/navigation';
+  import {
+    candidateAssetsRoute,
+    candidateRoute,
+    dataRoute,
+    methodologyRoute,
+    searchRoute,
+    sourcesRoute,
+  } from '$lib/navigation';
+  import { formatPtBrDateTime, formatPtBrNumber } from '$lib/format';
 
   export let data: PageData;
 
@@ -23,8 +31,8 @@
     </div>
 
     <p class="lead">
-      A V1 indexa uma pergunta central: patrimonio declarado na eleicao presidencial 2026.
-      Busque pelo nome oficial ou pelo SQ_CANDIDATO.
+      A V1 indexa os candidatos presidenciais de 2026 disponíveis no banco.
+      Busque pelo nome oficial ou pelo SQ_CANDIDATO e abra a trilha de evidencia.
     </p>
 
     <form class="search-form" action={searchRoute()} method="get">
@@ -45,6 +53,8 @@
         Ver bens
       </a>
       <a class="button-secondary" href={sourcesRoute()}>Ver fontes</a>
+      <a class="button-secondary" href={dataRoute()}>Dados</a>
+      <a class="button-secondary" href={methodologyRoute()}>Metodologia</a>
     </div>
   </div>
 
@@ -69,20 +79,76 @@
         <p class="metric-label">Nenhuma correspondencia</p>
         <p class="metric-value">0 resultados</p>
         <p class="metric-note">
-          A V1 responde apenas a este slice oficial no momento. Tente o nome exato ou o
-          SQ_CANDIDATO acima.
+          Tente o nome oficial, o partido ou o SQ_CANDIDATO.
         </p>
       </div>
     {:else}
       <div class="metric">
-        <p class="metric-label">Exemplo indexado</p>
-        <p class="metric-value">{summary.assets.length} bens</p>
+        <p class="metric-label">Candidatos indexados</p>
+        <p class="metric-value">{formatPtBrNumber(data.catalogCount)}</p>
         <p class="metric-note">
-          A busca pode ser usada para entrar na pagina do candidato sem decorar a rota.
+          A busca agora pode percorrer o catálogo, não apenas o destaque fixo.
         </p>
       </div>
     {/if}
   </aside>
+</section>
+
+<section class="card section">
+  <div class="section-title">
+    <div>
+      <p class="panel-title">{data.query ? 'Resultados' : 'Catálogo'}</p>
+      <h2>{data.query ? 'Candidatos que correspondem à busca' : 'Candidatos presidenciais indexados'}</h2>
+    </div>
+    <span class="badge badge-accent">{formatPtBrNumber(data.candidates.length)} candidatos</span>
+  </div>
+
+  {#if data.candidates.length}
+    <div class="candidate-grid">
+      {#each data.candidates as candidate}
+        <article class="candidate-card">
+          <div class="candidate-head">
+            <div>
+              <p class="eyebrow">
+                {candidate.candidate.position ?? 'PRESIDENTE'} · {candidate.party?.acronym ?? 'Sem partido'}
+              </p>
+              <h3>{candidate.person.canonical_name}</h3>
+            </div>
+            <span class="badge">{candidate.candidate.external_id}</span>
+          </div>
+
+          <p class="note">{candidate.claim?.statement ?? 'Patrimônio calculado a partir dos bens oficiais.'}</p>
+
+          <dl class="candidate-metrics">
+            <div>
+              <dt>Bens</dt>
+              <dd>{formatPtBrNumber(candidate.assets.length)}</dd>
+            </div>
+            <div>
+              <dt>Total</dt>
+              <dd>{candidate.declared_assets_total.formatted}</dd>
+            </div>
+            <div>
+              <dt>Coleta</dt>
+              <dd>{formatPtBrDateTime(candidate.provenance.candidate_raw_record.collected_at)}</dd>
+            </div>
+          </dl>
+
+          <div class="toolbar candidate-toolbar">
+            <a class="button" href={candidateRoute(candidate.candidate.external_id)}>Abrir candidato</a>
+            <a class="button-secondary" href={candidateAssetsRoute(candidate.candidate.external_id)}>
+              Ver bens
+            </a>
+          </div>
+        </article>
+      {/each}
+    </div>
+  {:else}
+    <p class="note">
+      Nenhum candidato corresponde ao filtro atual. Tente nome completo, partido ou SQ_CANDIDATO,
+      ou limpe a busca para ver o catálogo.
+    </p>
+  {/if}
 </section>
 
 <section class="grid grid-2">
@@ -132,6 +198,65 @@
 </section>
 
 <style>
+  .candidate-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .candidate-card {
+    padding: 1rem;
+    border: 1px solid rgba(15, 118, 110, 0.15);
+    border-radius: 1.35rem;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.84), rgba(255, 255, 255, 0.7)),
+      var(--surface-strong);
+    box-shadow: var(--shadow);
+  }
+
+  .candidate-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .candidate-head h3 {
+    margin: 0.1rem 0 0;
+    font-size: 1.35rem;
+  }
+
+  .candidate-metrics {
+    margin: 0.85rem 0 0;
+    display: grid;
+    gap: 0.75rem;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .candidate-metrics dt {
+    color: var(--muted);
+    font-size: 0.76rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+
+  .candidate-metrics dd {
+    margin: 0.25rem 0 0;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.35;
+  }
+
+  .candidate-toolbar {
+    margin-top: 0.9rem;
+  }
+
+  .candidate-toolbar .button,
+  .candidate-toolbar .button-secondary {
+    flex: 1 1 10rem;
+    justify-content: center;
+  }
+
   .search-form {
     display: flex;
     flex-wrap: wrap;
@@ -172,6 +297,11 @@
   @media (max-width: 900px) {
     .search-form input {
       flex-basis: 100%;
+    }
+
+    .candidate-grid,
+    .candidate-metrics {
+      grid-template-columns: 1fr;
     }
   }
 </style>
