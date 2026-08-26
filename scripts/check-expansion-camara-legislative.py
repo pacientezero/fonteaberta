@@ -12,6 +12,7 @@ if str(API_ROOT) not in sys.path:
     sys.path.insert(0, str(API_ROOT))
 
 from app.camara_legislative import (  # noqa: E402
+    fetch_recent_substantive_vote_ids,
     fetch_vote_summary,
     ingest_official_bundle,
     ingest_recent_official_votes,
@@ -34,13 +35,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--limit",
         type=int,
-        default=15,
+        default=100,
         help="How many recent nominal votes to ingest in --recent mode.",
     )
     parser.add_argument(
         "--pages",
         type=int,
-        default=4,
+        default=40,
         help="How many official pages to scan in --recent mode.",
     )
     parser.add_argument(
@@ -53,15 +54,17 @@ def parse_args() -> argparse.Namespace:
 
 
 def run_recent_mode(connection, limit: int, pages: int) -> None:
-    ingested = ingest_recent_official_votes(connection, limit=limit, pages=pages)
+    discovered_vote_ids = fetch_recent_substantive_vote_ids(limit=limit, pages=pages)
+    ingested = ingest_recent_official_votes(connection, limit=len(discovered_vote_ids), pages=pages)
     catalog = query_recent_votes_response(connection, limit=limit)
     nominal_count = sum(1 for item in catalog["votes"] if item["member_count"] > 0)
     symbolic_count = sum(1 for item in catalog["votes"] if item["member_count"] == 0)
 
-    assert len(ingested) >= limit
+    assert discovered_vote_ids
+    assert len(ingested) == len(discovered_vote_ids)
     assert catalog["status"] == "ok"
     assert catalog["count"] == len(catalog["votes"])
-    assert catalog["count"] >= limit
+    assert catalog["count"] == len(discovered_vote_ids)
     assert nominal_count + symbolic_count == catalog["count"]
     assert len({item["proposition"]["external_id"] for item in catalog["votes"]}) >= 2
     assert nominal_count >= 1
@@ -71,6 +74,7 @@ def run_recent_mode(connection, limit: int, pages: int) -> None:
         json.dumps(
             {
                 "mode": "recent",
+                "discovered_votes": len(discovered_vote_ids),
                 "ingested_votes": len(ingested),
                 "catalog_count": catalog["count"],
                 "votes": [

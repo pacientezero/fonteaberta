@@ -193,6 +193,11 @@ export async function loadFeaturedCandidateSummary(fetchFn: typeof fetch): Promi
 export async function loadCandidateCatalog(
   fetchFn: typeof fetch,
   limit = 20,
+  query?: string,
 ): Promise<TseCandidateCatalogResponse> {
-  return fetchJson<TseCandidateCatalogResponse>(fetchFn, `/tse/candidatos?limit=${limit}`);
+  const params = new URLSearchParams({ limit: String(limit) });
+  if (query?.trim()) {
+    params.set('q', query.trim());
+  }
+  return fetchJson<TseCandidateCatalogResponse>(fetchFn, `/tse/candidatos?${params.toString()}`);
 }

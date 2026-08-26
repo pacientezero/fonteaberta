@@ -43,3 +43,33 @@ export function methodologyRoute(): string {
 export function legislativeRoute(): string {
   return '/legislativo';
 }
+
+export interface LegislativeVotesRouteParams {
+  q?: string;
+  kind?: 'all' | 'nominal' | 'symbolic';
+}
+
+export function legislativeVotesRoute(params?: LegislativeVotesRouteParams): string {
+  if (!params) {
+    return '/legislativo/votacoes';
+  }
+
+  const searchParams = new URLSearchParams();
+  if (params.q) {
+    searchParams.set('q', params.q);
+  }
+  if (params.kind && params.kind !== 'all') {
+    searchParams.set('kind', params.kind);
+  }
+
+  const query = searchParams.toString();
+  return query ? `/legislativo/votacoes?${query}` : '/legislativo/votacoes';
+}
+
+export function legislativeDeputyRoute(deputyId: string): string {
+  return `/legislativo/deputado/${encodeURIComponent(deputyId)}`;
+}
+
+export function camaraVoteRoute(voteId: string): string {
+  return `/legislativo/votacao/${encodeURIComponent(voteId)}`;
+}

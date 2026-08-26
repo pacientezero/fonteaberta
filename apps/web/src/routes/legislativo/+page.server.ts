@@ -7,7 +7,7 @@ import {
 export const load: PageServerLoad = async ({ fetch }) => {
   const [featured, recent] = await Promise.all([
     loadFeaturedCamaraVoteSummary(fetch),
-    loadRecentCamaraVoteCatalog(fetch, 15),
+    loadRecentCamaraVoteCatalog(fetch, 100),
   ]);
 
   return {

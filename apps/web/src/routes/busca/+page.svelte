@@ -31,8 +31,8 @@
     </div>
 
     <p class="lead">
-      A V1 indexa os candidatos presidenciais de 2026 disponíveis no banco.
-      Busque pelo nome oficial ou pelo SQ_CANDIDATO e abra a trilha de evidencia.
+      A V1 indexa os candidatos oficiais de 2026 disponíveis no banco.
+      Busque pelo nome oficial, partido ou pelo SQ_CANDIDATO e abra a trilha de evidência.
     </p>
 
     <form class="search-form" action={searchRoute()} method="get">
@@ -97,8 +97,54 @@
 <section class="card section">
   <div class="section-title">
     <div>
+      <p class="panel-title">Atalhos oficiais</p>
+      <h2>Nomes já confirmados em atas públicas</h2>
+    </div>
+    <span class="badge badge-accent">{data.officialRoster.length} candidatos</span>
+  </div>
+
+  <p class="note">
+    Estes nomes seguem como atalhos rápidos para as atas públicas do TSE, enquanto a busca percorre o
+    catálogo oficial completo importado para o banco.
+  </p>
+
+  <div class="roster-grid">
+    {#each data.officialRoster as nomination}
+      <article class="roster-card">
+        <div class="roster-head">
+          <div>
+            <p class="eyebrow">
+              {nomination.partyAcronym} · Nº {nomination.ballotNumber}
+            </p>
+            <h3>{nomination.displayName}</h3>
+          </div>
+          <span class={nomination.imported ? 'badge badge-accent' : 'badge'}>
+            {nomination.imported ? 'importado' : 'ata pública'}
+          </span>
+        </div>
+
+        <p class="note">
+          {#if nomination.imported}
+            Já existe ficha local para este nome. O atalho abre o candidato importado.
+          {:else}
+            Ainda não existe ficha local. O atalho abre a ata oficial que confirma a indicação.
+          {/if}
+        </p>
+
+        <div class="toolbar roster-toolbar">
+          <a class="button" href={nomination.openHref}>{nomination.openLabel}</a>
+          <a class="button-secondary" href={nomination.searchHref}>Buscar nome</a>
+        </div>
+      </article>
+    {/each}
+  </div>
+</section>
+
+<section class="card section">
+  <div class="section-title">
+    <div>
       <p class="panel-title">{data.query ? 'Resultados' : 'Catálogo'}</p>
-      <h2>{data.query ? 'Candidatos que correspondem à busca' : 'Candidatos presidenciais indexados'}</h2>
+      <h2>{data.query ? 'Candidatos que correspondem à busca' : 'Candidatos oficiais indexados'}</h2>
     </div>
     <span class="badge badge-accent">{formatPtBrNumber(data.candidates.length)} candidatos</span>
   </div>
@@ -204,6 +250,44 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .roster-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .roster-card {
+    padding: 1rem;
+    border: 1px solid rgba(37, 99, 235, 0.15);
+    border-radius: 1.35rem;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.84), rgba(255, 255, 255, 0.7)),
+      var(--surface-strong);
+    box-shadow: var(--shadow);
+  }
+
+  .roster-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .roster-head h3 {
+    margin: 0.1rem 0 0;
+    font-size: 1.2rem;
+  }
+
+  .roster-toolbar {
+    margin-top: 0.9rem;
+  }
+
+  .roster-toolbar .button,
+  .roster-toolbar .button-secondary {
+    flex: 1 1 10rem;
+    justify-content: center;
+  }
+
   .candidate-card {
     padding: 1rem;
     border: 1px solid rgba(15, 118, 110, 0.15);
@@ -300,6 +384,7 @@
     }
 
     .candidate-grid,
+    .roster-grid,
     .candidate-metrics {
       grid-template-columns: 1fr;
     }
