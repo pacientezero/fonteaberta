@@ -1,6 +1,12 @@
 <script lang="ts">
   import type { PageData } from './$types';
-  import { dataRoute, homeRoute, sourcesRoute } from '$lib/navigation';
+  import {
+    camaraVoteRoute,
+    dataRoute,
+    homeRoute,
+    legislativeVotesRoute,
+    sourcesRoute,
+  } from '$lib/navigation';
   import { formatPtBrDate, formatPtBrDateTime, formatPtBrNumber } from '$lib/format';
 
   export let data: PageData;
@@ -43,6 +49,7 @@
     <p class="quote">{summary.claim?.statement}</p>
 
     <div class="toolbar">
+      <a class="button" href={legislativeVotesRoute()}>Abrir catálogo</a>
       <a class="button" href={dataRoute()}>Abrir cobertura</a>
       <a class="button-secondary" href={sourcesRoute()}>Ver fontes</a>
       <a class="button-secondary" href={homeRoute()}>Inicio</a>
@@ -196,6 +203,73 @@
 </section>
 
 <section class="card section">
+    <div class="section-title">
+      <div>
+        <p class="panel-title">Votações nominais recentes</p>
+        <h2>Projetos aprovados com voto por parlamentar</h2>
+        <p class="note">
+          {formatPtBrNumber(nominalRecentVotes.length)} votações já trazem lista nominal completa no portal oficial.
+        </p>
+      </div>
+      <div class="toolbar">
+        <a class="button-secondary" href={legislativeVotesRoute()}>Abrir catálogo</a>
+      </div>
+    </div>
+
+  {#if nominalRecentVotes.length}
+    <div class="recent-grid">
+      {#each nominalRecentVotes as item}
+        <article class="recent-card nominal-card">
+          <div class="recent-head">
+            <div>
+              <p class="eyebrow">{item.proposition.sigla_tipo} {item.proposition.number}/{item.proposition.year}</p>
+              <h3>{item.proposition.title}</h3>
+            </div>
+            <span class={item.vote.approved ? 'badge badge-accent' : 'badge'}>
+              {item.vote.approved ? 'Aprovado' : 'Rejeitado'}
+            </span>
+          </div>
+
+          <p class="recent-headline">{item.vote.description}</p>
+          <p class="note">{item.vote.result ?? 'Resultado oficial não informado'}</p>
+
+          <dl class="recent-metrics">
+            <div>
+              <dt>Sim</dt>
+              <dd>{formatPtBrNumber(item.vote.yes_votes)}</dd>
+            </div>
+            <div>
+              <dt>Não</dt>
+              <dd>{formatPtBrNumber(item.vote.no_votes)}</dd>
+            </div>
+            <div>
+              <dt>Outros</dt>
+              <dd>{formatPtBrNumber(item.vote.other_votes)}</dd>
+            </div>
+            <div>
+              <dt>Registros</dt>
+              <dd>{formatPtBrNumber(item.member_count)}</dd>
+            </div>
+          </dl>
+
+          <div class="toolbar recent-toolbar">
+            <a class="button-secondary" href={camaraVoteRoute(item.vote.external_id)}>Abrir detalhe</a>
+            <a class="button" href={item.vote.source_url ?? '#'} target="_blank" rel="noreferrer">
+              Abrir fonte oficial
+            </a>
+            <a class="button-secondary" href={item.proposition.source_url ?? '#'} target="_blank" rel="noreferrer">
+              Ver proposição
+            </a>
+          </div>
+        </article>
+      {/each}
+    </div>
+  {:else}
+    <p class="note">Nenhuma votação nominal recente foi carregada ainda.</p>
+  {/if}
+</section>
+
+<section class="card section">
   <div class="section-title">
     <div>
       <p class="panel-title">Cobertura recente</p>
@@ -258,6 +332,7 @@
           {/if}
 
           <div class="toolbar recent-toolbar">
+            <a class="button-secondary" href={camaraVoteRoute(item.vote.external_id)}>Abrir detalhe</a>
             <a class="button" href={item.vote.source_url ?? '#'} target="_blank" rel="noreferrer">
               Abrir fonte oficial
             </a>
@@ -319,6 +394,11 @@
     font-size: 1.05rem;
     line-height: 1.45;
     font-weight: 600;
+  }
+
+  .nominal-card {
+    border-color: rgba(124, 58, 237, 0.18);
+    box-shadow: inset 0 3px 0 rgba(124, 58, 237, 0.2), var(--shadow);
   }
 
   .recent-metrics {

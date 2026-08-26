@@ -18,6 +18,7 @@ from app.bcb_expansion import (
     payload_hash,
     upsert_claim_evidence,
 )
+from app.camara_legislative import fetch_person_vote_history
 from app.tse_v1 import normalize_name
 
 CURRENT_FILE = Path(__file__).resolve()
@@ -834,11 +835,21 @@ def query_mandate_response(conn, deputy_id: str, legislature_id: str | int = 57)
         return {
             "status": "no_evidence",
             "mandate": None,
+            "vote_history": [],
+            "vote_history_counts": {
+                "yes_votes": 0,
+                "no_votes": 0,
+                "other_votes": 0,
+                "total_votes": 0,
+            },
             "citations": [],
         }
+    history = fetch_person_vote_history(conn, summary["person_id"], limit=25)
     return {
         "status": "ok",
         "mandate": summary,
+        "vote_history": history["votes"],
+        "vote_history_counts": history["counts"],
         "citations": [
             {
                 "evidence_id": summary["evidence_id"],

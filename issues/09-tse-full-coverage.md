@@ -1,7 +1,7 @@
 # Issue 09 - TSE presidential coverage full
 
 Phase: 02-tse-v1
-Status: open
+Status: completed
 
 ## Goal
 
@@ -30,6 +30,7 @@ Expand the presidential TSE slice from the single featured sample to the full 20
 
 ## Notes
 
-- The official TSE dataset page for `Candidatos - 2026` exposes separate CSV resources for `Candidatos` and `Bens de candidatos`.
-- The current repository only has a single-candidate fixture sample, so this issue is the formal backlog item for the missing coverage.
-- The public search path now exposes a presidential candidate catalog route, but the imported database still contains only one candidate because the official ZIP resources are blocked from this environment with `403`.
+- The official TSE dataset page for `Candidatos - 2026` exposes separate CSV resources for `Candidatos`, `Candidatos complementar`, and `Bens de candidatos`.
+- The repository now imports the full 2026 candidate catalog, the complementary dataset, and all declared assets into the local database.
+- The public search path now exposes the full candidate catalog and can search by name or `SQ_CANDIDATO`.
+- Current runtime evidence shows `20.732` imported candidates and traceable complementary and asset provenance for the featured sample.

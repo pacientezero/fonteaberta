@@ -115,9 +115,9 @@ def fetch_official_bundle(vote_external_id: str) -> dict[str, Any]:
     }
 
 
-def fetch_recent_substantive_vote_ids(limit: int = 5, *, pages: int = 3) -> list[str]:
+def fetch_recent_substantive_vote_ids(limit: int = 100, *, pages: int = 40) -> list[str]:
     limit = max(1, min(limit, 100))
-    pages = max(1, min(pages, 10))
+    pages = max(1, min(pages, 40))
     vote_ids: list[str] = []
     seen: set[str] = set()
 
@@ -256,11 +256,11 @@ def ensure_catalog(conn, bundle: Mapping[str, Any]) -> dict[str, dict[str, Any]]
 def ingest_recent_official_votes(
     conn,
     *,
-    limit: int = 15,
-    pages: int = 4,
+    limit: int = 100,
+    pages: int = 40,
 ) -> list[dict[str, Any]]:
-    limit = max(1, min(limit, 15))
-    pages = max(1, min(pages, 10))
+    limit = max(1, min(limit, 100))
+    pages = max(1, min(pages, 40))
     ingested: list[dict[str, Any]] = []
     seen: set[str] = set()
 
@@ -1570,6 +1570,135 @@ def fetch_vote_summary(conn, vote_external_id: str) -> dict[str, Any]:
     }
 
 
+def fetch_person_vote_history(conn, person_id: str, limit: int = 20) -> dict[str, Any]:
+    limit = max(1, min(limit, 50))
+    rows = conn.execute(
+        """
+        SELECT
+            lv.id AS vote_id,
+            lv.external_id AS vote_external_id,
+            lv.house,
+            lv.vote_date,
+            lv.vote_timestamp,
+            lv.description,
+            lv.result,
+            lv.vote_type,
+            lv.approved,
+            lv.total_votes,
+            lv.yes_votes,
+            lv.no_votes,
+            lv.other_votes,
+            lv.source_url AS vote_source_url,
+            lv.raw_record_id AS vote_raw_record_id,
+            lv.evidence_id AS vote_evidence_id,
+            lp.id AS proposition_id,
+            lp.external_id AS proposition_external_id,
+            lp.sigla_tipo,
+            lp.number,
+            lp.year,
+            lp.title AS proposition_title,
+            lp.summary AS proposition_summary,
+            lp.presented_at AS proposition_presented_at,
+            lp.status AS proposition_status,
+            lp.source_url AS proposition_source_url,
+            lvm.id AS member_vote_id,
+            lvm.external_id AS member_external_id,
+            lvm.vote_value,
+            lvm.vote_label,
+            lvm.source_url AS member_source_url,
+            lvm.raw_record_id AS member_raw_record_id,
+            lvm.evidence_id AS member_evidence_id,
+            lvm.source_updated_at AS member_source_updated_at,
+            lvm.collected_at AS member_collected_at,
+            party.acronym AS party_acronym,
+            party.name AS party_name,
+            party.number AS party_number
+        FROM legislative_vote_members AS lvm
+        JOIN legislative_votes AS lv ON lv.id = lvm.vote_id
+        JOIN legislative_propositions AS lp ON lp.id = lv.proposition_id
+        LEFT JOIN parties AS party ON party.id = lvm.party_id
+        WHERE lvm.person_id = %s
+          AND lv.approved = true
+        ORDER BY lv.vote_date DESC NULLS LAST, lv.vote_timestamp DESC NULLS LAST, lv.collected_at DESC
+        LIMIT %s
+        """,
+        (person_id, limit),
+    ).fetchall()
+
+    history: list[dict[str, Any]] = []
+    yes_votes = 0
+    no_votes = 0
+    other_votes = 0
+
+    for row in rows:
+        vote_value = row["vote_value"]
+        if vote_value == "sim":
+            yes_votes += 1
+        elif vote_value == "nao":
+            no_votes += 1
+        else:
+            other_votes += 1
+
+        history.append(
+            {
+                "vote": {
+                    "id": row["vote_id"],
+                    "external_id": row["vote_external_id"],
+                    "house": row["house"],
+                    "vote_date": row["vote_date"],
+                    "vote_timestamp": row["vote_timestamp"],
+                    "description": row["description"],
+                    "result": row["result"],
+                    "vote_type": row["vote_type"],
+                    "approved": row["approved"],
+                    "total_votes": row["total_votes"],
+                    "yes_votes": row["yes_votes"],
+                    "no_votes": row["no_votes"],
+                    "other_votes": row["other_votes"],
+                    "source_url": row["vote_source_url"],
+                    "raw_record_id": row["vote_raw_record_id"],
+                    "evidence_id": row["vote_evidence_id"],
+                },
+                "proposition": {
+                    "id": row["proposition_id"],
+                    "external_id": row["proposition_external_id"],
+                    "sigla_tipo": row["sigla_tipo"],
+                    "number": row["number"],
+                    "year": row["year"],
+                    "title": row["proposition_title"],
+                    "summary": row["proposition_summary"],
+                    "presented_at": row["proposition_presented_at"],
+                    "status": row["proposition_status"],
+                    "source_url": row["proposition_source_url"],
+                },
+                "member_vote": {
+                    "id": row["member_vote_id"],
+                    "external_id": row["member_external_id"],
+                    "vote_value": row["vote_value"],
+                    "vote_label": row["vote_label"],
+                    "party_acronym": row["party_acronym"],
+                    "party_name": row["party_name"],
+                    "party_number": row["party_number"],
+                    "source_url": row["member_source_url"],
+                    "raw_record_id": row["member_raw_record_id"],
+                    "evidence_id": row["member_evidence_id"],
+                    "source_updated_at": row["member_source_updated_at"],
+                    "collected_at": row["member_collected_at"],
+                },
+            }
+        )
+
+    return {
+        "votes": history,
+        "counts": {
+            "yes_votes": yes_votes,
+            "no_votes": no_votes,
+            "other_votes": other_votes,
+            "total_votes": len(history),
+        },
+    }
+
+
 def query_vote_response(conn, vote_external_id: str) -> dict[str, Any]:
     try:
         summary = fetch_vote_summary(conn, vote_external_id)
@@ -1597,8 +1726,8 @@ def query_vote_response(conn, vote_external_id: str) -> dict[str, Any]:
     }
 
 
-def query_recent_votes_response(conn, limit: int = 15) -> dict[str, Any]:
-    limit = max(1, min(limit, 20))
+def query_recent_votes_response(conn, limit: int = 100) -> dict[str, Any]:
+    limit = max(1, min(limit, 100))
     rows = conn.execute(
         """
         SELECT

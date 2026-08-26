@@ -25,6 +25,7 @@ DEFAULT_FIXTURE_PATH = PROJECT_ROOT / "tests" / "fixtures" / "tse" / "official_2
 
 TSE_SOURCE_SLUG = "tse"
 TSE_CANDIDATES_DATASET_SLUG = "candidatos-2026"
+TSE_CANDIDATES_COMPLEMENTARY_DATASET_SLUG = "candidatos-complementar-2026"
 TSE_ASSETS_DATASET_SLUG = "bens-candidato-2026"
 
 
@@ -162,6 +163,7 @@ def upsert_source(conn, bundle: Mapping[str, Any]) -> dict[str, Any]:
                 {
                     "portal_url": "https://dadosabertos.tse.jus.br/",
                     "candidate_dataset_url": bundle["metadata"]["candidate_dataset_url"],
+                    "candidate_complementary_dataset_url": bundle["metadata"].get("complementary_dataset_url"),
                     "candidate_assets_dataset_url": bundle["metadata"]["asset_dataset_url"],
                 }
             ),
@@ -240,6 +242,21 @@ def ensure_tse_catalog(conn, bundle: Mapping[str, Any]) -> dict[str, dict[str, A
             "resource_kind": "consulta_cand_2026",
         },
     )
+    complementary_dataset_url = bundle["metadata"].get("complementary_dataset_url")
+    complementary_dataset = None
+    if complementary_dataset_url:
+        complementary_dataset = upsert_dataset(
+            conn,
+            source["id"],
+            "Candidatos Complementares 2026",
+            TSE_CANDIDATES_COMPLEMENTARY_DATASET_SLUG,
+            TSE_CANDIDATES_COMPLEMENTARY_DATASET_SLUG,
+            complementary_dataset_url,
+            {
+                "portal_dataset_url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026",
+                "resource_kind": "consulta_cand_complementar_2026",
+            },
+        )
     asset_dataset = upsert_dataset(
         conn,
         source["id"],
@@ -255,6 +272,7 @@ def ensure_tse_catalog(conn, bundle: Mapping[str, Any]) -> dict[str, dict[str, A
     return {
         "source": source,
         "candidate_dataset": candidate_dataset,
+        "complementary_dataset": complementary_dataset,
         "asset_dataset": asset_dataset,
     }
 
@@ -495,6 +513,7 @@ def upsert_candidate(
     declared_assets_total: Decimal,
     source_updated_at: datetime | None,
     collected_at: datetime,
+    raw_payload: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     return _fetch_one(
         conn,
@@ -550,7 +569,7 @@ def upsert_candidate(
             declared_assets_total,
             source_updated_at,
             collected_at,
-            Jsonb(dict(candidate_row)),
+            Jsonb(dict(raw_payload or candidate_row)),
         ),
     )
 
@@ -837,6 +856,204 @@ def insert_claim_fact_and_links(
     return {"fact": fact, "claim": claim}
 
 
+def ingest_candidate_bundle(
+    conn,
+    *,
+    source: Mapping[str, Any],
+    candidate_dataset: Mapping[str, Any],
+    asset_dataset: Mapping[str, Any],
+    candidate_row: Mapping[str, Any],
+    asset_rows: list[Mapping[str, Any]],
+    ingestion_run_id: str,
+    candidate_dataset_url: str,
+    asset_dataset_url: str,
+    complementary_dataset: Mapping[str, Any] | None = None,
+    complementary_dataset_url: str | None = None,
+    complementary_row: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
+    now = datetime.now(timezone.utc)
+    candidate_source_updated_at = parse_br_datetime(candidate_row["DT_GERACAO"], candidate_row["HH_GERACAO"])
+    complementary_source_updated_at = (
+        parse_br_datetime(complementary_row["DT_GERACAO"], complementary_row["HH_GERACAO"])
+        if complementary_row is not None
+        else None
+    )
+
+    raw_payload = dict(candidate_row)
+    if complementary_row is not None:
+        raw_payload.update(complementary_row)
+        raw_payload["complementary"] = dict(complementary_row)
+
+    person = upsert_person(conn, source["id"], candidate_row)
+    party = upsert_party(conn, candidate_row)
+    election = upsert_election(conn, candidate_row)
+
+    declared_assets_total = sum(
+        ((parse_decimal(asset_row["VR_BEM_CANDIDATO"]) or Decimal("0")) for asset_row in asset_rows),
+        Decimal("0"),
+    )
+    candidate = upsert_candidate(
+        conn,
+        source["id"],
+        person["id"],
+        election["id"],
+        party["id"],
+        candidate_row,
+        declared_assets_total,
+        candidate_source_updated_at,
+        now,
+        raw_payload=raw_payload,
+    )
+
+    candidate_raw_record = upsert_raw_record(
+        conn,
+        source["id"],
+        candidate_dataset["id"],
+        ingestion_run_id,
+        candidate_row["SQ_CANDIDATO"],
+        candidate_row,
+        candidate_source_updated_at,
+        now,
+        "normalized",
+        {
+            "bundle_kind": "candidate",
+            "candidate_id": str(candidate["id"]),
+        },
+    )
+    candidate_evidence = upsert_evidence(
+        conn,
+        source["id"],
+        candidate_dataset["id"],
+        candidate_raw_record["id"],
+        candidate_row["SQ_CANDIDATO"],
+        candidate_dataset_url,
+        "candidate",
+        now,
+        candidate_raw_record["payload_hash"],
+        {
+            "bundle_kind": "candidate",
+            "candidate_external_id": candidate_row["SQ_CANDIDATO"],
+        },
+    )
+
+    complementary_raw_record = None
+    complementary_evidence = None
+    if complementary_dataset is not None and complementary_dataset_url is not None and complementary_row is not None:
+        complementary_external_id = f"{candidate_row['SQ_CANDIDATO']}:complementary"
+        complementary_raw_record = upsert_raw_record(
+            conn,
+            source["id"],
+            complementary_dataset["id"],
+            ingestion_run_id,
+            complementary_external_id,
+            complementary_row,
+            complementary_source_updated_at,
+            now,
+            "normalized",
+            {
+                "bundle_kind": "candidate_complementary",
+                "candidate_external_id": candidate_row["SQ_CANDIDATO"],
+            },
+        )
+        complementary_evidence = upsert_evidence(
+            conn,
+            source["id"],
+            complementary_dataset["id"],
+            complementary_raw_record["id"],
+            complementary_external_id,
+            complementary_dataset_url,
+            "candidate_complementary",
+            now,
+            complementary_raw_record["payload_hash"],
+            {
+                "bundle_kind": "candidate_complementary",
+                "candidate_external_id": candidate_row["SQ_CANDIDATO"],
+            },
+        )
+
+    asset_records: list[dict[str, Any]] = []
+    asset_evidences: list[dict[str, Any]] = []
+    for asset_row in asset_rows:
+        asset_external_id = f"{candidate_row['SQ_CANDIDATO']}:{asset_row['NR_ORDEM_BEM_CANDIDATO']}"
+        raw_record = upsert_raw_record(
+            conn,
+            source["id"],
+            asset_dataset["id"],
+            ingestion_run_id,
+            asset_external_id,
+            asset_row,
+            parse_br_datetime(asset_row["DT_ULT_ATUAL_BEM_CANDIDATO"], asset_row["HH_ULT_ATUAL_BEM_CANDIDATO"]),
+            now,
+            "normalized",
+            {
+                "bundle_kind": "candidate_asset",
+                "candidate_external_id": candidate_row["SQ_CANDIDATO"],
+                "asset_order": asset_row["NR_ORDEM_BEM_CANDIDATO"],
+            },
+        )
+        evidence = upsert_evidence(
+            conn,
+            source["id"],
+            asset_dataset["id"],
+            raw_record["id"],
+            asset_external_id,
+            asset_dataset_url,
+            "candidate_asset",
+            now,
+            raw_record["payload_hash"],
+            {
+                "bundle_kind": "candidate_asset",
+                "candidate_external_id": candidate_row["SQ_CANDIDATO"],
+                "asset_order": asset_row["NR_ORDEM_BEM_CANDIDATO"],
+            },
+        )
+        asset = upsert_candidate_asset(
+            conn,
+            candidate["id"],
+            source["id"],
+            asset_row,
+            parse_br_datetime(asset_row["DT_ULT_ATUAL_BEM_CANDIDATO"], asset_row["HH_ULT_ATUAL_BEM_CANDIDATO"]),
+        )
+        asset_records.append(asset)
+        asset_evidences.append(evidence)
+
+    conn.execute(
+        """
+        UPDATE candidates
+        SET declared_assets_total = %s
+        WHERE id = %s
+        """,
+        (declared_assets_total, candidate["id"]),
+    )
+
+    provenance = insert_claim_fact_and_links(
+        conn,
+        candidate["id"],
+        source["id"],
+        declared_assets_total,
+        len(asset_records),
+        candidate_evidence["id"],
+        [evidence["id"] for evidence in asset_evidences],
+        candidate_row["SQ_CANDIDATO"],
+    )
+
+    return {
+        "person": person,
+        "party": party,
+        "election": election,
+        "candidate": candidate,
+        "candidate_raw_record": candidate_raw_record,
+        "candidate_evidence": candidate_evidence,
+        "complementary_raw_record": complementary_raw_record,
+        "complementary_evidence": complementary_evidence,
+        "asset_records": asset_records,
+        "asset_evidences": asset_evidences,
+        "fact": provenance["fact"],
+        "claim": provenance["claim"],
+        "declared_assets_total": declared_assets_total,
+    }
+
+
 def ingest_official_bundle(conn, bundle: Mapping[str, Any], *, source_checksum_value: str | None = None) -> dict[str, Any]:
     catalog = ensure_tse_catalog(conn, bundle)
     source = catalog["source"]
@@ -899,8 +1116,8 @@ def ingest_official_bundle(conn, bundle: Mapping[str, Any], *, source_checksum_v
     election = upsert_election(conn, candidate_row)
 
     declared_assets_total = sum(
-        (parse_decimal(asset_row["VR_BEM_CANDIDATO"]) or Decimal("0"))
-        for asset_row in asset_rows
+        ((parse_decimal(asset_row["VR_BEM_CANDIDATO"]) or Decimal("0")) for asset_row in asset_rows),
+        Decimal("0"),
     )
     candidate = upsert_candidate(
         conn,
@@ -1163,13 +1380,20 @@ def fetch_candidate_summary(conn, candidate_external_id: str) -> dict[str, Any]:
         SELECT id, source_id, name, slug, external_id, format, resource_url, scope, period_start, period_end, update_frequency, enabled, metadata, created_at, updated_at
         FROM datasets
         WHERE source_id = (SELECT id FROM sources WHERE slug = %s)
-          AND slug IN (%s, %s)
+          AND slug IN (%s, %s, %s)
         ORDER BY CASE WHEN slug = %s THEN 0 ELSE 1 END
         """,
-        (TSE_SOURCE_SLUG, TSE_CANDIDATES_DATASET_SLUG, TSE_ASSETS_DATASET_SLUG, TSE_CANDIDATES_DATASET_SLUG),
+        (
+            TSE_SOURCE_SLUG,
+            TSE_CANDIDATES_DATASET_SLUG,
+            TSE_CANDIDATES_COMPLEMENTARY_DATASET_SLUG,
+            TSE_ASSETS_DATASET_SLUG,
+            TSE_CANDIDATES_DATASET_SLUG,
+        ),
     ).fetchall()
 
     candidate_dataset_id = None
+    complementary_dataset_id = None
     asset_dataset_id = None
     serialized_datasets: list[dict[str, Any]] = []
     for row in datasets:
@@ -1177,6 +1401,8 @@ def fetch_candidate_summary(conn, candidate_external_id: str) -> dict[str, Any]:
         serialized_datasets.append(dataset)
         if dataset["slug"] == TSE_CANDIDATES_DATASET_SLUG:
             candidate_dataset_id = dataset["id"]
+        elif dataset["slug"] == TSE_CANDIDATES_COMPLEMENTARY_DATASET_SLUG:
+            complementary_dataset_id = dataset["id"]
         elif dataset["slug"] == TSE_ASSETS_DATASET_SLUG:
             asset_dataset_id = dataset["id"]
 
@@ -1201,6 +1427,31 @@ def fetch_candidate_summary(conn, candidate_external_id: str) -> dict[str, Any]:
         """,
         (candidate_raw_record["id"],),
     ).fetchone()
+
+    complementary_raw_record = None
+    complementary_evidence = None
+    if complementary_dataset_id is not None:
+        complementary_raw_record = conn.execute(
+            """
+            SELECT rr.id, rr.source_id, rr.dataset_id, rr.ingestion_run_id, rr.external_id, rr.payload, rr.payload_hash, rr.source_updated_at, rr.collected_at, rr.processing_status, rr.metadata, rr.created_at
+            FROM raw_records AS rr
+            WHERE rr.source_id = %s
+              AND rr.dataset_id = %s
+              AND rr.external_id = %s
+            LIMIT 1
+            """,
+            (candidate["source_id"], complementary_dataset_id, f"{candidate_external_id}:complementary"),
+        ).fetchone()
+        if complementary_raw_record is not None:
+            complementary_evidence = conn.execute(
+                """
+                SELECT e.id, e.source_id, e.dataset_id, e.raw_record_id, e.external_id, e.source_url, e.page, e.section, e.collected_at, e.payload_hash, e.metadata, e.created_at
+                FROM evidence AS e
+                WHERE e.raw_record_id = %s
+                LIMIT 1
+                """,
+                (complementary_raw_record["id"],),
+            ).fetchone()
 
     asset_rows = conn.execute(
         """
@@ -1383,6 +1634,26 @@ def fetch_candidate_summary(conn, candidate_external_id: str) -> dict[str, Any]:
                 "section": candidate_evidence["section"],
                 "payload_hash": candidate_evidence["payload_hash"],
             },
+            "complementary_raw_record": {
+                "id": complementary_raw_record["id"],
+                "external_id": complementary_raw_record["external_id"],
+                "payload_hash": complementary_raw_record["payload_hash"],
+                "source_updated_at": format_datetime(complementary_raw_record["source_updated_at"]),
+                "collected_at": format_datetime(complementary_raw_record["collected_at"]),
+                "processing_status": complementary_raw_record["processing_status"],
+                "dataset_id": complementary_raw_record["dataset_id"],
+            }
+            if complementary_raw_record is not None
+            else None,
+            "complementary_evidence": {
+                "id": complementary_evidence["id"],
+                "external_id": complementary_evidence["external_id"],
+                "source_url": complementary_evidence["source_url"],
+                "section": complementary_evidence["section"],
+                "payload_hash": complementary_evidence["payload_hash"],
+            }
+            if complementary_evidence is not None
+            else None,
             "asset_evidence": [
                 {
                     "id": row["evidence_id"],
@@ -1414,21 +1685,50 @@ def fetch_candidate_summary(conn, candidate_external_id: str) -> dict[str, Any]:
     }
 
 
-def query_candidate_catalog_response(conn, limit: int = 20) -> dict[str, Any]:
+def query_candidate_catalog_response(conn, limit: int = 20, q: str | None = None) -> dict[str, Any]:
     limit = max(1, min(limit, 100))
-    rows = conn.execute(
-        """
-        SELECT c.external_id
-        FROM candidates AS c
-        JOIN elections AS e ON e.id = c.election_id
-        JOIN sources AS s ON s.id = c.source_id
-        WHERE s.slug = %s
-          AND e.year = 2026
-          AND c.position = 'PRESIDENTE'
-        ORDER BY c.collected_at DESC, c.external_id DESC
+    search_text = normalize_name(q.strip()) if q and q.strip() else ""
+    search_query = q.strip() if q and q.strip() else ""
+    where_clauses = [
+        "s.slug = %s",
+        "e.year = 2026",
+    ]
+    params: list[Any] = [TSE_SOURCE_SLUG]
+    if search_text:
+        like_text = f"%{search_text}%"
+        like_query = f"%{search_query}%"
+        where_clauses.append(
+            """
+            (
+                p.normalized_name LIKE %s
+                OR p.canonical_name ILIKE %s
+                OR c.external_id = %s
+                OR COALESCE(pa.acronym, '') ILIKE %s
+                OR COALESCE(pa.name, '') ILIKE %s
+            )
+            """.strip()
+        )
+        params.extend([like_text, like_query, search_query, like_query, like_query])
+    sql = f"""
+        WITH matched AS (
+            SELECT
+                c.external_id,
+                c.collected_at
+            FROM candidates AS c
+            JOIN people AS p ON p.id = c.person_id
+            LEFT JOIN parties AS pa ON pa.id = c.party_id
+            JOIN elections AS e ON e.id = c.election_id
+            JOIN sources AS s ON s.id = c.source_id
+            WHERE {' AND '.join(where_clauses)}
+        )
+        SELECT external_id, COUNT(*) OVER() AS total
+        FROM matched
+        ORDER BY collected_at DESC, external_id DESC
         LIMIT %s
-        """,
-        (TSE_SOURCE_SLUG, limit),
+        """
+    rows = conn.execute(
+        sql,
+        (*params, limit),
     ).fetchall()
 
     candidates: list[dict[str, Any]] = []
@@ -1440,7 +1740,7 @@ def query_candidate_catalog_response(conn, limit: int = 20) -> dict[str, Any]:
 
     return {
         "status": "ok",
-        "count": len(candidates),
+        "count": rows[0]["total"] if rows else 0,
         "candidates": candidates,
     }
 

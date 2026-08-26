@@ -32,4 +32,5 @@ Expand the Câmara legislative slice beyond the initial single-vote sample so th
 
 - Keep the scope on Câmara first, because the official Câmara API is accessible and can be validated directly.
 - Do not treat the existing single-vote sample as sufficient for the objective.
-- The live slice now covers 15 approved votes, with 3 nominal votes that expose member-level records and 12 symbolic approvals that do not expose individual votes. The provenance chain and public discovery path stay intact for both kinds of records.
+- The live slice now covers 45 approved votes, with 6 nominal votes that expose member-level records and 39 symbolic approvals that do not expose individual votes. The provenance chain and public discovery path stay intact for both kinds of records.
+- The public `legislativo` page now separates the nominal votes into a dedicated section, each nominal vote has a local detail page, each member links into a deputy history page, and `/legislativo/votacoes` exposes a searchable catalog with nominal/symbolic filters so the slice is easier to explore than in the mixed recent feed.

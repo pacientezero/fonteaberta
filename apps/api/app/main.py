@@ -100,9 +100,9 @@ def tse_candidate(sq_candidato: str) -> dict[str, object]:
 
 
 @app.get("/tse/candidatos")
-def tse_candidate_catalog(limit: int = 20) -> dict[str, object]:
+def tse_candidate_catalog(limit: int = 20, q: str | None = None) -> dict[str, object]:
     with db_connection() as connection:
-        return query_candidate_catalog_response(connection, limit=limit)
+        return query_candidate_catalog_response(connection, limit=limit, q=q)
 
 
 @app.post("/v1/entities/resolve")

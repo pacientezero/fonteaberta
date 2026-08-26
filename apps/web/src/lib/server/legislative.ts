@@ -159,6 +159,102 @@ export interface LegislativeVoteCatalogResponse {
   votes: LegislativeVoteCatalogItem[];
 }
 
+export interface LegislativeDeputyMandate {
+  id: string | null;
+  external_id: string | null;
+  legislature_external_id: string | null;
+  chamber: string | null;
+  electoral_name: string | null;
+  state: string | null;
+  party_acronym: string | null;
+  status: string | null;
+  email: string | null;
+  profile_url: string | null;
+  photo_url: string | null;
+  started_at: string | null;
+  ended_at: string | null;
+  source_updated_at: string | null;
+  collected_at: string | null;
+  raw_payload: JsonRecord;
+  metadata: JsonRecord;
+  person_id: string;
+  canonical_name: string;
+  normalized_name: string;
+  birth_date: string | null;
+  birth_place: string | null;
+  person_metadata: JsonRecord;
+  party_id: string | null;
+  party_name: string | null;
+  party_acronym_resolved: string | null;
+  party_number: number | null;
+  source_id: string;
+  source_slug: string;
+  source_name: string;
+  dataset_id: string;
+  dataset_slug: string;
+  raw_record_id: string | null;
+  raw_record_external_id: string | null;
+  raw_record_payload_hash: string | null;
+  evidence_id: string | null;
+  evidence_external_id: string | null;
+  evidence_source_url: string | null;
+  fact_id: string | null;
+  fact_predicate: string | null;
+  fact_value_text: string | null;
+  fact_effective_date: string | null;
+  claim_id: string | null;
+  claim_statement: string | null;
+  claim_type: string | null;
+  claim_calculation_method: string | null;
+}
+
+export interface LegislativeDeputyVoteHistoryItem {
+  vote: LegislativeVoteCatalogVote;
+  proposition: {
+    id: string;
+    external_id: string;
+    sigla_tipo: string;
+    number: number;
+    year: number;
+    title: string;
+    summary: string | null;
+    presented_at: string | null;
+    status: string | null;
+    source_url: string | null;
+  };
+  member_vote: {
+    id: string;
+    external_id: string;
+    vote_value: string;
+    vote_label: string;
+    party_acronym: string | null;
+    party_name: string | null;
+    party_number: number | null;
+    source_url: string | null;
+    raw_record_id: string | null;
+    evidence_id: string | null;
+    source_updated_at: string | null;
+    collected_at: string | null;
+  };
+}
+
+export interface LegislativeDeputyResponse {
+  status: string;
+  mandate: LegislativeDeputyMandate | null;
+  vote_history: LegislativeDeputyVoteHistoryItem[];
+  vote_history_counts: {
+    yes_votes: number;
+    no_votes: number;
+    other_votes: number;
+    total_votes: number;
+  } | null;
+  citations: Array<{
+    evidence_id: string | null;
+    source_url: string | null;
+    raw_record_id: string | null;
+  }>;
+}
+
 const API_BASE_URL = getApiBaseUrl();
 export const FEATURED_CAMARA_VOTE_ID = '2580259-24';
 
@@ -178,13 +274,28 @@ export async function loadCamaraVoteSummary(fetchFn: typeof fetch, voteId: strin
   return fetchJson<LegislativeVoteResponse>(fetchFn, camaraVotePath(voteId));
 }
 
+export function camaraDeputyPath(deputyId: string): string {
+  return `/v1/government/camara/deputados/${deputyId}`;
+}
+
+export async function loadCamaraDeputySummary(
+  fetchFn: typeof fetch,
+  deputyId: string,
+): Promise<LegislativeDeputyResponse> {
+  const response = await fetchFn(`${API_BASE_URL}${camaraDeputyPath(deputyId)}`);
+  if (!response.ok) {
+    throw error(response.status, response.status === 404 ? 'Deputado não encontrado' : 'Falha ao carregar histórico do deputado');
+  }
+  return (await response.json()) as LegislativeDeputyResponse;
+}
+
 export async function loadFeaturedCamaraVoteSummary(fetchFn: typeof fetch): Promise<LegislativeVoteResponse> {
   return loadCamaraVoteSummary(fetchFn, FEATURED_CAMARA_VOTE_ID);
 }
 
 export async function loadRecentCamaraVoteCatalog(
   fetchFn: typeof fetch,
-  limit = 15,
+  limit = 100,
 ): Promise<LegislativeVoteCatalogResponse> {
   return fetchJson<LegislativeVoteCatalogResponse>(
     fetchFn,

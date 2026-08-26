@@ -1,6 +1,16 @@
 import { getApiBaseUrl } from '$lib/server/api';
 import { formatPtBrDate, formatPtBrDateTime, formatPtBrMoney, formatPtBrNumber } from '$lib/format';
-import { candidateAssetsRoute, candidateRoute, documentsRoute, legislativeRoute } from '$lib/navigation';
+import {
+  candidateAssetsRoute,
+  candidateRoute,
+  documentsRoute,
+  legislativeRoute,
+  legislativeDeputyRoute,
+  legislativeVotesRoute,
+  methodologyRoute,
+  searchRoute,
+  sourcesRoute,
+} from '$lib/navigation';
 import { loadFeaturedCamaraVoteSummary, loadRecentCamaraVoteCatalog } from '$lib/server/legislative';
 import { loadCandidateCatalog, loadFeaturedCandidateSummary } from '$lib/server/tse';
 import { queryOfficialDocuments } from '$lib/server/documents';
@@ -16,6 +26,54 @@ const SENADO_ROUTE = `/v1/government/senado/senadores/${SENADO_MANDATE_IDENTIFIE
 const TRANSPARENCIA_ROUTE = '/v1/government/transparencia/despesas';
 const BCB_ROUTE = '/v1/economic/bcb/selic';
 const IBGE_ROUTE = '/v1/economic/ibge/ipca';
+
+interface PresidentialNomination {
+  displayName: string;
+  partyAcronym: string;
+  ballotNumber: number;
+  sourceUrl: string;
+  importedCandidateExternalId?: string;
+}
+
+export const TSE_PRESIDENTIAL_ROSTER_2026: PresidentialNomination[] = [
+  {
+    displayName: 'Flávio Nantes Bolsonaro',
+    partyAcronym: 'PL',
+    ballotNumber: 22,
+    sourceUrl: 'https://divulgacandcontas.tse.jus.br/divulga/rest/arquivo/eleicao/20322002026/ata/56',
+  },
+  {
+    displayName: 'Leonardo Alves de Araújo',
+    partyAcronym: 'PRTB',
+    ballotNumber: 28,
+    sourceUrl: 'https://divulgacandcontas.tse.jus.br/divulga/rest/arquivo/eleicao/20322002026/ata/305',
+  },
+  {
+    displayName: 'Hertz da Conceição Dias',
+    partyAcronym: 'PSTU',
+    ballotNumber: 16,
+    sourceUrl: 'https://divulgacandcontas.tse.jus.br/divulga/rest/arquivo/eleicao/20322002026/ata/723',
+  },
+  {
+    displayName: 'Renan Antonio Ferreira dos Santos',
+    partyAcronym: 'MISSÃO',
+    ballotNumber: 14,
+    sourceUrl: 'https://divulgacandcontas.tse.jus.br/divulga/rest/arquivo/eleicao/20322002026/ata/119',
+    importedCandidateExternalId: '280002540694',
+  },
+  {
+    displayName: 'Romeu Zema Neto',
+    partyAcronym: 'NOVO',
+    ballotNumber: 30,
+    sourceUrl: 'https://divulgacandcontas.tse.jus.br/divulga/rest/arquivo/eleicao/20322002026/ata/470',
+  },
+  {
+    displayName: 'Samara Martins da Silva Feitosa',
+    partyAcronym: 'UP',
+    ballotNumber: 80,
+    sourceUrl: 'https://divulgacandcontas.tse.jus.br/divulga/rest/arquivo/eleicao/20322002026/ata/317',
+  },
+];
 
 type CardVariant = 'web' | 'api';
 type CardStatus = 'ok' | 'error';
@@ -50,9 +108,20 @@ export interface CoverageSummary {
   note: string;
 }
 
+export interface CoverageAuditItem {
+  key: string;
+  status: 'ok' | 'partial' | 'blocked';
+  title: string;
+  detail: string;
+  evidence: string;
+  href: string;
+  label: string;
+}
+
 export interface CoverageDashboard {
   summary: CoverageSummary[];
   cards: CoverageCard[];
+  audit: CoverageAuditItem[];
 }
 
 interface SafeResult<T> {
@@ -167,22 +236,30 @@ export async function loadCoverageDashboard(fetchFn: typeof fetch): Promise<Cove
     safeLoad(fetchJson<Record<string, any>>(fetchFn, IBGE_ROUTE)),
     safeLoad(fetchJson<Record<string, any>>(fetchFn, CAMARA_ROUTE)),
     safeLoad(loadFeaturedCamaraVoteSummary(fetchFn)),
-    safeLoad(loadRecentCamaraVoteCatalog(fetchFn, 15)),
+    safeLoad(loadRecentCamaraVoteCatalog(fetchFn, 100)),
     safeLoad(fetchJson<Record<string, any>>(fetchFn, SENADO_ROUTE)),
     safeLoad(fetchJson<Record<string, any>>(fetchFn, TRANSPARENCIA_ROUTE)),
     safeLoad(fetchJson<Record<string, any>>(fetchFn, TESOURO_ROUTE)),
     safeLoad(fetchJson<Record<string, any>>(fetchFn, COMPRASGOV_ROUTE)),
   ]);
 
+  const recentVotes = recentLegislativeResult.data?.votes ?? [];
+  const nominalRecentVotes = recentVotes.filter((item) => item.member_count > 0);
+  const symbolicRecentVotes = recentVotes.filter((item) => item.member_count === 0);
+
   const cards: CoverageCard[] = [];
 
   if (candidateResult.data) {
     const summary = candidateResult.data;
     const candidateCount = candidateCatalogResult.data?.count ?? 0;
+    const nominationNames = TSE_PRESIDENTIAL_ROSTER_2026.map((nomination) => nomination.displayName).join(' · ');
+    const nominationParties = TSE_PRESIDENTIAL_ROSTER_2026.map(
+      (nomination) => `${nomination.partyAcronym} ${nomination.ballotNumber}`,
+    ).join(', ');
     cards.push({
       key: 'tse-v1',
       variant: 'web',
-      eyebrow: 'V1 presidencial',
+      eyebrow: 'V1 TSE',
       title: 'Tribunal Superior Eleitoral',
       headline: summary.person.canonical_name,
       description: `${summary.declared_assets_total.formatted} somados a partir de ${formatPtBrNumber(summary.assets.length)} bens oficiais e ${formatPtBrNumber(candidateCount)} candidato(s) indexado(s).`,
@@ -201,6 +278,33 @@ export async function loadCoverageDashboard(fetchFn: typeof fetch): Promise<Cove
       accent: '#2563eb',
       status: 'ok',
       statusLabel: 'V1 ativa',
+    });
+
+    cards.push({
+      key: 'tse-roster-2026',
+      variant: 'web',
+      eyebrow: 'TSE 2026',
+      title: 'Roster oficial do TSE',
+      headline: `${formatPtBrNumber(TSE_PRESIDENTIAL_ROSTER_2026.length)} nomes confirmados nas atas públicas`,
+      description:
+        `As atas públicas já confirmam ${formatPtBrNumber(TSE_PRESIDENTIAL_ROSTER_2026.length)} candidaturas presidenciais: ` +
+        `${nominationNames}. O ZIP oficial de candidatos, complementar e bens já foi importado, ` +
+        'então a busca cobre o catálogo completo e os atalhos seguem só para contexto público.',
+      metrics: [
+        { label: 'Atas públicas', value: formatPtBrNumber(TSE_PRESIDENTIAL_ROSTER_2026.length) },
+        { label: 'Partidos', value: nominationParties },
+        { label: 'Importado', value: `${formatPtBrNumber(candidateCount)} candidato(s)` },
+        { label: 'Estado', value: 'Completo e documentado' },
+      ],
+      primaryLabel: 'Ver fontes',
+      primaryHref: sourcesRoute(),
+      primaryExternal: false,
+      secondaryLabel: 'Ver metodologia',
+      secondaryHref: methodologyRoute(),
+      secondaryExternal: false,
+      accent: '#0f766e',
+      status: 'ok',
+      statusLabel: 'Coberto',
     });
   } else {
     cards.push(
@@ -321,27 +425,34 @@ export async function loadCoverageDashboard(fetchFn: typeof fetch): Promise<Cove
   if (camaraResult.data) {
     const mandate = camaraResult.data.mandate;
     const legislature = formatLegislatureLabel(String(mandate.legislature_external_id ?? ''));
+    const voteHistoryCounts = camaraResult.data.vote_history_counts ?? {
+      yes_votes: 0,
+      no_votes: 0,
+      other_votes: 0,
+      total_votes: 0,
+    };
     cards.push({
       key: 'camara-deputados',
       variant: 'api',
       eyebrow: 'Legislativo',
       title: 'Câmara dos Deputados',
       headline: String(mandate.canonical_name ?? mandate.electoral_name ?? 'Mandato oficial'),
-      description: `${mandate.party_acronym ?? 'Sem partido'} · ${mandate.state ?? 'BR'} · ${legislature}`,
+      description: `${mandate.party_acronym ?? 'Sem partido'} · ${mandate.state ?? 'BR'} · ${legislature} · ${formatPtBrNumber(voteHistoryCounts.total_votes)} votações nominais aprovadas.`,
       metrics: [
         { label: 'Status', value: String(mandate.status ?? 'Não informado') },
-        { label: 'Perfil', value: String(mandate.profile_url ?? 'Não informado') },
+        { label: 'A favor', value: formatPtBrNumber(voteHistoryCounts.yes_votes) },
+        { label: 'Contra', value: formatPtBrNumber(voteHistoryCounts.no_votes) },
         { label: 'Coleta', value: formatPtBrDateTime(mandate.collected_at) },
       ],
-      primaryLabel: 'Abrir JSON',
-      primaryHref: apiHref(CAMARA_ROUTE),
-      primaryExternal: true,
-      secondaryLabel: 'Perfil oficial',
-      secondaryHref: externalHref(mandate.profile_url),
-      secondaryExternal: Boolean(mandate.profile_url),
+      primaryLabel: 'Abrir histórico',
+      primaryHref: legislativeDeputyRoute(CAMARA_DEPUTY_ID),
+      primaryExternal: false,
+      secondaryLabel: 'Ver JSON',
+      secondaryHref: apiHref(CAMARA_ROUTE),
+      secondaryExternal: true,
       accent: '#7c3aed',
       status: 'ok',
-      statusLabel: 'Mandato vivo',
+      statusLabel: voteHistoryCounts.total_votes > 0 ? 'Histórico vivo' : 'Mandato vivo',
     });
   } else {
     cards.push(
@@ -351,9 +462,6 @@ export async function loadCoverageDashboard(fetchFn: typeof fetch): Promise<Cove
 
   if (legislativeResult.data) {
     const response = legislativeResult.data;
-    const recentVotes = recentLegislativeResult.data?.votes ?? [];
-    const nominalRecentVotes = recentVotes.filter((item) => item.member_count > 0);
-    const symbolicRecentVotes = recentVotes.filter((item) => item.member_count === 0);
     const totals = recentVotes.reduce(
       (acc, item) => {
         acc.yes += item.vote.yes_votes;
@@ -379,17 +487,17 @@ export async function loadCoverageDashboard(fetchFn: typeof fetch): Promise<Cove
       description: recentVotes.length
         ? `${recentVotes.length} votações aprovadas já cobertas; ${nominalRecentVotes.length} são nominais com lista de membros e ${symbolicRecentVotes.length} não expõem voto individual no portal oficial.`
         : vote?.description ??
-          'Votação nominal oficial com lista de parlamentares que votaram a favor ou contra.',
+          'Catálogo de votações aprovadas da Câmara com detalhe local e filtros nominais ou simbólicos.',
       metrics: [
         { label: 'Fonte', value: response.vote?.source?.name ?? 'Câmara dos Deputados' },
         { label: 'Cobertas', value: formatPtBrNumber(recentVotes.length || 1) },
         { label: 'Nominais', value: formatPtBrNumber(nominalRecentVotes.length) },
         { label: 'Sem lista', value: formatPtBrNumber(symbolicRecentVotes.length) },
       ],
-      primaryLabel: 'Abrir votação',
-      primaryHref: legislativeRoute(),
+      primaryLabel: 'Abrir catálogo',
+      primaryHref: legislativeVotesRoute(),
       primaryExternal: false,
-      secondaryLabel: 'Ver lista',
+      secondaryLabel: 'Ver resumo',
       secondaryHref: legislativeRoute(),
       secondaryExternal: false,
       accent: '#7c3aed',
@@ -403,11 +511,11 @@ export async function loadCoverageDashboard(fetchFn: typeof fetch): Promise<Cove
         'Legislativo',
         'Câmara / votações aprovadas',
         '#7c3aed',
-        legislativeRoute(),
-        'Abrir votação',
+        legislativeVotesRoute(),
+        'Abrir catálogo',
         legislativeResult.error || 'Falha ao carregar a votação nominal da Câmara.',
         legislativeRoute(),
-        'Ver lista',
+        'Ver resumo',
       ),
     );
   }
@@ -537,7 +645,7 @@ export async function loadCoverageDashboard(fetchFn: typeof fetch): Promise<Cove
     {
       label: 'Experiências públicas',
       value: formatPtBrNumber(cards.filter((card) => card.variant === 'web').length),
-      note: 'V1 presidencial e RAG documental',
+      note: 'V1 TSE e RAG documental',
     },
     {
       label: 'Frentes de API',
@@ -551,8 +659,42 @@ export async function loadCoverageDashboard(fetchFn: typeof fetch): Promise<Cove
     },
   ];
 
+  const audit: CoverageAuditItem[] = [
+    {
+      key: 'tse-presidential',
+      status: (candidateCatalogResult.data?.count ?? 0) > 1000 ? 'ok' : 'partial',
+      title: 'TSE oficial 2026',
+      detail:
+        'A busca pública agora percorre o catálogo completo importado do TSE, com candidatos, complementar e bens rastreáveis no banco; os atalhos por atas ficam só como contexto público.',
+      evidence: `Catálogo importado: ${formatPtBrNumber(candidateCatalogResult.data?.count ?? 0)} candidato(s); atas confirmadas: ${formatPtBrNumber(TSE_PRESIDENTIAL_ROSTER_2026.length)} nomes.`,
+      href: searchRoute(),
+      label: 'Abrir busca',
+    },
+    {
+      key: 'camara-legislative',
+      status: recentVotes.length > 0 ? 'ok' : 'blocked',
+      title: 'Câmara: projetos aprovados e votos',
+      detail:
+        'A cobertura legislativa já responde projetos aprovados, votos nominais, votos simbólicos e histórico por deputado com trilha de evidência.',
+      evidence: `${formatPtBrNumber(recentVotes.length)} votações aprovadas cobridas; ${formatPtBrNumber(nominalRecentVotes.length)} nominais com lista de membros; ${formatPtBrNumber(symbolicRecentVotes.length)} simbólicas sem voto individual.`,
+      href: legislativeVotesRoute(),
+      label: 'Abrir catálogo',
+    },
+    {
+      key: 'camara-deputy',
+      status: camaraResult.data ? 'ok' : 'blocked',
+      title: 'Câmara: histórico por deputado',
+      detail:
+        'Cada voto nominal agora pode ser aberto a partir do parlamentar e o mandato atual continua navegável no JSON oficial e na página pública.',
+      evidence: `Mandato ${camaraResult.data ? 'vivo' : 'indisponível'} para o deputado #${CAMARA_DEPUTY_ID}.`,
+      href: legislativeDeputyRoute(CAMARA_DEPUTY_ID),
+      label: 'Abrir histórico',
+    },
+  ];
+
   return {
     summary,
     cards,
+    audit,
   };
 }

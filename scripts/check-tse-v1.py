@@ -41,13 +41,24 @@ def main() -> int:
         ingest_official_bundle(connection, bundle, source_checksum_value=source_checksum)
         summary = fetch_candidate_summary(connection, bundle["candidate"]["SQ_CANDIDATO"])
         catalog = query_candidate_catalog_response(connection, limit=20)
+        search_catalog = query_candidate_catalog_response(connection, limit=20, q="RENAN")
+        search_by_id_catalog = query_candidate_catalog_response(
+            connection,
+            limit=20,
+            q=bundle["candidate"]["SQ_CANDIDATO"],
+        )
 
     expected_total = "795089.00"
     expected_total_brl = "R$ 795.089,00"
 
     assert summary["source"]["name"] == "Tribunal Superior Eleitoral"
     assert summary["source"]["slug"] == "tse"
-    assert {dataset["slug"] for dataset in summary["datasets"]} == {"candidatos-2026", "bens-candidato-2026"}
+    assert len(summary["datasets"]) == 3
+    assert {dataset["slug"] for dataset in summary["datasets"]} == {
+        "candidatos-2026",
+        "candidatos-complementar-2026",
+        "bens-candidato-2026",
+    }
     assert summary["candidate"]["external_id"] == "280002540694"
     assert summary["candidate"]["declared_assets_total"] == expected_total
     assert summary["declared_assets_total"]["value"] == expected_total
@@ -55,10 +66,18 @@ def main() -> int:
     assert summary["declared_assets_total"]["asset_count"] == 4
     assert summary["claim"]["statement"] == f"Patrimônio declarado: {expected_total_brl}"
     assert len(summary["assets"]) == 4
+    assert summary["provenance"]["complementary_raw_record"] is not None
+    assert summary["provenance"]["complementary_evidence"] is not None
     assert len(summary["provenance"]["claim_evidence"]) == 5
     assert catalog["status"] == "ok"
     assert catalog["count"] >= 1
     assert catalog["candidates"][0]["candidate"]["external_id"] == "280002540694"
+    assert search_catalog["status"] == "ok"
+    assert search_catalog["count"] >= 1
+    assert search_catalog["candidates"][0]["candidate"]["external_id"] == "280002540694"
+    assert search_by_id_catalog["status"] == "ok"
+    assert search_by_id_catalog["count"] >= 1
+    assert search_by_id_catalog["candidates"][0]["candidate"]["external_id"] == "280002540694"
 
     print(
         json.dumps(
@@ -69,6 +88,7 @@ def main() -> int:
                 "source": summary["source"]["name"],
                 "datasets": [dataset["slug"] for dataset in summary["datasets"]],
                 "catalog_count": catalog["count"],
+                "search_count": search_catalog["count"],
             },
             ensure_ascii=False,
             indent=2,
